@@ -19,6 +19,7 @@
 
     <build>
         <sourceDirectory>src/main/flex</sourceDirectory>
+        <testSourceDirectory>src/test/flex</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.sonatype.flexmojos</groupId>
@@ -74,7 +75,7 @@
         <dependency>
             <groupId>com.adobe.flexunit</groupId>
             <artifactId>flexunit</artifactId>
-            <version>4.1.0-beta3</version>
+            <version>4.1.0</version>
             <type>swc</type>
             <scope>test</scope>
         </dependency>

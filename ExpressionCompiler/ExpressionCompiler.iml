@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" version="4">
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="flex" name="Flex">
-      <configuration>
+      <configuration flex_sdk="compiler-4.5.1.21328.pom">
         <option name="DO_BUILD" value="true" />
         <option name="OUTPUT_TYPE" value="Application" />
         <option name="USE_DEFAULT_SDK_CONFIG_FILE" value="false" />
@@ -34,16 +34,39 @@
   <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
-    <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/flex" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/flex" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="jdk" jdkName="4.5.1 (player 10.2)" jdkType="Flex SDK Type" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.adobe.flexunit:flexunit:swc:4.1.0-beta3" level="project" />
-    <orderEntry type="library" name="Maven: com.away3d:away3d:swc:4.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:advancedgrids:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:authoringsupport:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:charts:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:core:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:flash-integration:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:framework:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:mx:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:osmf:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:rpc:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:spark:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:sparkskins:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:spark_dmv:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:textLayout:swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:advancedgrids:rb.swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:charts:rb.swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:framework:rb.swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:mx:rb.swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:osmf:rb.swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:rpc:rb.swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:spark:rb.swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:textLayout:rb.swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:flash-integration:rb.swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:playerglobal:swc:10.2:4.5.1.21328" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.flex.framework:playerglobal:rb.swc:4.5.1.21328" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.adobe.flexunit:flexunit:swc:4.1.0" level="project" />
     <orderEntry type="library" name="Maven: as3commons:as3commons-bytecode:swc:RC3:1.0-RC3" level="project" />
     <orderEntry type="library" name="Maven: as3commons:as3commons-lang:swc:0.3.4" level="project" />
     <orderEntry type="library" name="Maven: as3commons:as3commons-reflect:swc:1.3.4" level="project" />
