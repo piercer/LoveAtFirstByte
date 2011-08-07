@@ -1,5 +1,8 @@
 package
 {
+    import com.dz015.expressions.tokens.IExpressionTokeniser;
+    import com.dz015.expressions.tokens.Token;
+
     import org.flexunit.asserts.assertEquals;
 
     public class ExpressionTokeniserTest

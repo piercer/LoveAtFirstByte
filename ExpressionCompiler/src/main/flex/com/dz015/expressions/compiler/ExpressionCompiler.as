@@ -1,15 +1,18 @@
-package
+package com.dz015.expressions.compiler
 {
-    import flash.display.Sprite;
+
+    import com.dz015.expressions.shuntyard.InfixToPostfixConverter;
+    import com.dz015.expressions.tokens.IExpressionTokeniser;
+    import com.dz015.expressions.tokens.Token;
+    import com.dz015.expressions.tokens.TokenStack;
+
     import flash.events.Event;
+    import flash.events.EventDispatcher;
     import flash.events.IOErrorEvent;
     import flash.utils.getDefinitionByName;
 
     import org.as3commons.bytecode.abc.AbcFile;
-    import org.as3commons.bytecode.abc.Integer;
     import org.as3commons.bytecode.abc.LNamespace;
-    import org.as3commons.bytecode.abc.Multiname;
-    import org.as3commons.bytecode.abc.NamespaceSet;
     import org.as3commons.bytecode.abc.QualifiedName;
     import org.as3commons.bytecode.abc.enum.Opcode;
     import org.as3commons.bytecode.emit.IAbcBuilder;
@@ -20,70 +23,65 @@ package
     import org.as3commons.bytecode.emit.impl.MethodArgument;
     import org.as3commons.bytecode.swf.AbcClassLoader;
 
-    [SWF(backgroundColor="#FF0000",height="500",width="500",frameRate="60")]
-    public class ExpressionCompiler extends Sprite
+    [Event(name="compileComplete", type="com.dz015.expressions.compiler.CompilerEvent")]
+    public class ExpressionCompiler extends EventDispatcher
     {
+
+        private static var _classNumber:uint = 0;
+
         public function ExpressionCompiler()
         {
-            var x:Number = Math.sin( 1.2 );
+
+        }
+
+        public function compile( expression:String, tokeniser:IExpressionTokeniser ):void
+        {
             var abcBuilder:IAbcBuilder = new AbcBuilder();
             var packageBuilder:IPackageBuilder = abcBuilder.definePackage( "com.classes.generated" );
-            var classBuilder:IClassBuilder = packageBuilder.defineClass( "RuntimeClass" );
+            var classBuilder:IClassBuilder = packageBuilder.defineClass( "RuntimeClass" + _classNumber );
             var methodBuilder:IMethodBuilder = classBuilder.defineMethod( "f" );
-//            var argument:MethodArgument = methodBuilder.defineArgument( "Object" );
+            methodBuilder.defineArgument( "Number" );
             methodBuilder.returnType = "Number";
-
-//            methodBuilder.addOpcode( Opcode.getlocal_0 )
-//                    .addOpcode( Opcode.pushscope )
-//                    .addOpcode( Opcode.getlocal_1 )
-//                    .addOpcode( Opcode.dup )
-//                    .addOpcode( Opcode.multiply )
-//                    .addOpcode( Opcode.returnvalue );
-
-//            var propertyName:Multiname = new Multiname( "p", new NamespaceSet( [LNamespace.PUBLIC] ) );
 
             var math:QualifiedName = new QualifiedName( "Math", LNamespace.PUBLIC );
             var sin:QualifiedName = new QualifiedName( "sin", LNamespace.PUBLIC );
             var cos:QualifiedName = new QualifiedName( "cos", LNamespace.PUBLIC );
             var tan:QualifiedName = new QualifiedName( "tan", LNamespace.PUBLIC );
-            var converter:InfixToPostfixConverter = new InfixToPostfixConverter();
-            var outputStack:TokenStack = converter.convert( '2*sin(3/cos(4+97/tan(3))' );
+            var pow:QualifiedName = new QualifiedName( "pow", LNamespace.PUBLIC );
+            var converter:InfixToPostfixConverter = new InfixToPostfixConverter( tokeniser );
+            var outputStack:TokenStack = converter.convert( expression );
 
             methodBuilder.addOpcode( Opcode.getlocal_0 );
             methodBuilder.addOpcode( Opcode.pushscope );
-//            methodBuilder.addOpcode( Opcode.findpropstrict, [math] );
-//            methodBuilder.addOpcode( Opcode.getproperty, [math] );
             methodBuilder.addOpcode( Opcode.getlex, [ math ] );
-//            methodBuilder.addOpcode( Opcode.getproperty, [math] );
-
-            methodBuilder.addOpcode( Opcode.setlocal_1 );
+            methodBuilder.addOpcode( Opcode.setlocal_2 );
 
             for each ( var token:Token in outputStack.stack )
             {
                 switch ( token.type )
                 {
+                    case Token.SYMBOL:
+                        methodBuilder.addOpcode( Opcode.getlocal_1 )
+                        break;
 
                     case Token.NUMERIC:
                         methodBuilder.addOpcode( Opcode.pushdouble, [ new Number( token.value ) ] );
-                        trace( "PushDecimal: ", token.value );
                         break;
 
                     case Token.FUNCTION:
-                        methodBuilder.addOpcode( Opcode.getlocal_1 );
+                        methodBuilder.addOpcode( Opcode.getlocal_2 );
                         methodBuilder.addOpcode( Opcode.swap );
 
                         switch ( token.value )
                         {
+
                             case 'sin':
-                                trace( "sin" );
                                 methodBuilder.addOpcode( Opcode.callproperty, [sin,1] );
                                 break;
                             case 'cos':
-                                trace( "cos" );
                                 methodBuilder.addOpcode( Opcode.callproperty, [cos,1] );
                                 break;
                             case 'tan':
-                                trace( "tan" );
                                 methodBuilder.addOpcode( Opcode.callproperty, [tan,1] );
                                 break;
                         }
@@ -92,21 +90,26 @@ package
                     case Token.OPERATOR:
                         switch ( token.value )
                         {
+                            case '^':
+                                methodBuilder.addOpcode( Opcode.setlocal_3 );
+                                methodBuilder.addOpcode( Opcode.setlocal, [4] );
+                                methodBuilder.addOpcode( Opcode.getlocal_2 );
+                                methodBuilder.addOpcode( Opcode.getlocal, [4] );
+                                methodBuilder.addOpcode( Opcode.getlocal_3 );
+                                methodBuilder.addOpcode( Opcode.callproperty, [pow,2] );
+                                break;
+
                             case '*':
                                 methodBuilder.addOpcode( Opcode.multiply );
-                                trace( "Multiply" );
                                 break;
                             case '/':
                                 methodBuilder.addOpcode( Opcode.divide )
-                                trace( "Divide" );
                                 break;
                             case '+':
                                 methodBuilder.addOpcode( Opcode.add );
-                                trace( "Add" );
                                 break;
                             case '-':
                                 methodBuilder.addOpcode( Opcode.subtract );
-                                trace( "Subtract" );
                                 break;
                         }
                         break;
@@ -132,9 +135,7 @@ package
 
         private function loadedHandler( event:Event ):void
         {
-            var functionClass:Class = Class( getDefinitionByName( "com.classes.generated.RuntimeClass" ) );
-            var m:* = new functionClass();
-            trace( m.f() );
+            dispatchEvent( new CompilerEvent( CompilerEvent.COMPILE_COMPLETE, Class( getDefinitionByName( "com.classes.generated.RuntimeClass" + _classNumber++ ) ) ) );
         }
     }
 

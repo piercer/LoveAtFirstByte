@@ -1,5 +1,6 @@
 package
-{
+com.dz015.expressions.tokens{
+    import com.dz015.expressions.tokens.Token;
 
     public class TokenStack
     {
