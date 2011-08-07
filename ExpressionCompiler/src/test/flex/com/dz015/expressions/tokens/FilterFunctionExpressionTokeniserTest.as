@@ -15,7 +15,7 @@ package com.dz015.expressions.tokens
         [Before]
         public function setup():void
         {
-            _tokeniser = new DefaultExpressionTokeniser( new DefaultOperatorTokenFactory() );
+            _tokeniser = new FilterFunctionTokeniser( new FilterFunctionOperatorTokenFactory() );
         }
 
         [Test]
@@ -78,6 +78,58 @@ package com.dz015.expressions.tokens
             assertEquals( "Wrong token type returned with simple string", Token.SYMBOL, result[6].type );
             assertEquals( "Wrong token value returned with simple string", ")", result[7].value );
             assertEquals( "Wrong token type returned with simple string", Token.RIGHT_BRACKET, result[7].type );
+        }
+
+        [Test]
+        public function testGreaterThan():void
+        {
+            var result:Vector.<Token> = _tokeniser.tokenise( "y > 3" );
+            assertEquals( "Wrong number of tokens returned with simple string", 3, result.length );
+            assertEquals( "Wrong token value returned with simple string", "y", result[0].value );
+            assertEquals( "Wrong token type returned with simple string", Token.SYMBOL, result[0].type );
+            assertEquals( "Wrong token value returned with simple string", ">", result[1].value );
+            assertEquals( "Wrong token type returned with simple string", Token.OPERATOR, result[1].type );
+            assertEquals( "Wrong token value returned with simple string", "3", result[2].value );
+            assertEquals( "Wrong token type returned with simple string", Token.NUMERIC, result[2].type );
+        }
+
+        [Test]
+        public function testLessThan():void
+        {
+            var result:Vector.<Token> = _tokeniser.tokenise( "y<3" );
+            assertEquals( "Wrong number of tokens returned with simple string", 3, result.length );
+            assertEquals( "Wrong token value returned with simple string", "y", result[0].value );
+            assertEquals( "Wrong token type returned with simple string", Token.SYMBOL, result[0].type );
+            assertEquals( "Wrong token value returned with simple string", "<", result[1].value );
+            assertEquals( "Wrong token type returned with simple string", Token.OPERATOR, result[1].type );
+            assertEquals( "Wrong token value returned with simple string", "3", result[2].value );
+            assertEquals( "Wrong token type returned with simple string", Token.NUMERIC, result[2].type );
+        }
+
+        [Test]
+        public function testLessThanOrEquals():void
+        {
+            var result:Vector.<Token> = _tokeniser.tokenise( "y<=3" );
+            assertEquals( "Wrong number of tokens returned with simple string", 3, result.length );
+            assertEquals( "Wrong token value returned with simple string", "y", result[0].value );
+            assertEquals( "Wrong token type returned with simple string", Token.SYMBOL, result[0].type );
+            assertEquals( "Wrong token value returned with simple string", "<=", result[1].value );
+            assertEquals( "Wrong token type returned with simple string", Token.OPERATOR, result[1].type );
+            assertEquals( "Wrong token value returned with simple string", "3", result[2].value );
+            assertEquals( "Wrong token type returned with simple string", Token.NUMERIC, result[2].type );
+        }
+
+        [Test]
+        public function testGreaterThanOrEquals():void
+        {
+            var result:Vector.<Token> = _tokeniser.tokenise( "y>=3" );
+            assertEquals( "Wrong number of tokens returned with simple string", 3, result.length );
+            assertEquals( "Wrong token value returned with simple string", "y", result[0].value );
+            assertEquals( "Wrong token type returned with simple string", Token.SYMBOL, result[0].type );
+            assertEquals( "Wrong token value returned with simple string", ">=", result[1].value );
+            assertEquals( "Wrong token type returned with simple string", Token.OPERATOR, result[1].type );
+            assertEquals( "Wrong token value returned with simple string", "3", result[2].value );
+            assertEquals( "Wrong token type returned with simple string", Token.NUMERIC, result[2].type );
         }
 
     }

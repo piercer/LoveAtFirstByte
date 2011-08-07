@@ -1,8 +1,8 @@
 package com.dz015.expressions.shuntyard
 {
 
-    import com.dz015.expressions.tokens.DefaultExpressionTokeniser;
-    import com.dz015.expressions.tokens.DefaultOperatorTokenFactory;
+    import com.dz015.expressions.tokens.FilterFunctionOperatorTokenFactory;
+    import com.dz015.expressions.tokens.FilterFunctionTokeniser;
     import com.dz015.expressions.tokens.TokenStack;
 
     import org.flexunit.asserts.assertEquals;
@@ -23,7 +23,7 @@ package com.dz015.expressions.shuntyard
         [Before]
         public function setup():void
         {
-            _converter = new InfixToPostfixConverter( new DefaultExpressionTokeniser( new DefaultOperatorTokenFactory() ) );
+            _converter = new InfixToPostfixConverter( new FilterFunctionTokeniser( new FilterFunctionOperatorTokenFactory() ) );
         }
 
         public static function testStatements():Array
@@ -39,7 +39,11 @@ package com.dz015.expressions.shuntyard
                 [ "y+3*cos(alpha)", "y 3 alpha cos * +" ],
                 [ "y+3*cos(alpha/(2*sin(t)))", "y 3 alpha 2 t sin * / cos * +" ],
                 [ "y+3*cos(alpha/2*sin(t))", "y 3 alpha 2 / t sin * cos * +" ],
-                [ "sin(x)/cos(x)", "x sin x cos /" ]
+                [ "sin(x)/cos(x)", "x sin x cos /" ],
+                [ "income>outgoings", "income outgoings >"],
+                [ "income>=outgoings", "income outgoings >="],
+                [ "income=outgoings", "income outgoings ="],
+                [ "3*profit-loss/2>profit/income", "3 profit * loss 2 / - profit income / >"]
             ];
         }
 

@@ -12,15 +12,18 @@ package com.dz015.expressions.compilers
     import flash.utils.getDefinitionByName;
 
     import org.as3commons.bytecode.abc.AbcFile;
+    import org.as3commons.bytecode.abc.ConstantPool;
     import org.as3commons.bytecode.abc.LNamespace;
+    import org.as3commons.bytecode.abc.MultinameL;
+    import org.as3commons.bytecode.abc.NamespaceSet;
     import org.as3commons.bytecode.abc.QualifiedName;
+    import org.as3commons.bytecode.abc.enum.MultinameKind;
     import org.as3commons.bytecode.abc.enum.Opcode;
     import org.as3commons.bytecode.emit.IAbcBuilder;
     import org.as3commons.bytecode.emit.IClassBuilder;
     import org.as3commons.bytecode.emit.IMethodBuilder;
     import org.as3commons.bytecode.emit.IPackageBuilder;
     import org.as3commons.bytecode.emit.impl.AbcBuilder;
-    import org.as3commons.bytecode.emit.impl.MethodArgument;
     import org.as3commons.bytecode.swf.AbcClassLoader;
 
     [Event(name="compileComplete", type="com.dz015.expressions.compilers.CompilerEvent")]
@@ -36,18 +39,26 @@ package com.dz015.expressions.compilers
 
         public function compile( expression:String, tokeniser:IExpressionTokeniser ):void
         {
-            var abcBuilder:IAbcBuilder = new AbcBuilder();
+
+            //var abcFile:AbcFile = new AbcFile();
+            //abcFile.constantPool = new ConstantPool();
+
+            var abcBuilder:IAbcBuilder = new AbcBuilder( abcFile );
             var packageBuilder:IPackageBuilder = abcBuilder.definePackage( "com.classes.generated" );
-            var classBuilder:IClassBuilder = packageBuilder.defineClass( "RuntimeClass" + _classNumber );
-            var methodBuilder:IMethodBuilder = classBuilder.defineMethod( "f" );
-            methodBuilder.defineArgument( "Number" );
-            methodBuilder.returnType = "Number";
+            var classBuilder:IClassBuilder = packageBuilder.defineClass( "FilterClass" + _classNumber );
+
+            var methodBuilder:IMethodBuilder = classBuilder.defineMethod( "filterFunction" );
+            methodBuilder.defineArgument( "Object" );
+            methodBuilder.returnType = "Boolean";
 
             var math:QualifiedName = new QualifiedName( "Math", LNamespace.PUBLIC );
             var sin:QualifiedName = new QualifiedName( "sin", LNamespace.PUBLIC );
             var cos:QualifiedName = new QualifiedName( "cos", LNamespace.PUBLIC );
             var tan:QualifiedName = new QualifiedName( "tan", LNamespace.PUBLIC );
             var pow:QualifiedName = new QualifiedName( "pow", LNamespace.PUBLIC );
+
+            var publicPropertyLate:MultinameL = new MultinameL( new NamespaceSet( [ LNamespace.PUBLIC ] ), MultinameKind.MULTINAME_L );
+
             var converter:InfixToPostfixConverter = new InfixToPostfixConverter( tokeniser );
             var outputStack:TokenStack = converter.convert( expression );
 
@@ -56,12 +67,20 @@ package com.dz015.expressions.compilers
             methodBuilder.addOpcode( Opcode.getlex, [ math ] );
             methodBuilder.addOpcode( Opcode.setlocal_2 );
 
+            classBuilder.constantPool = packageBuilder.constantPool;
+
             for each ( var token:Token in outputStack.stack )
             {
                 switch ( token.type )
                 {
                     case Token.SYMBOL:
-                        methodBuilder.addOpcode( Opcode.getlocal_1 )
+                        var index:int = classBuilder.constantPool.addString( token.value );
+                        methodBuilder.addOpcode( Opcode.getlocal_1 );
+//                        methodBuilder.addOpcode( Opcode.pushstring, [ token.value ] );
+                        methodBuilder.addOpcode( Opcode.pushstring, [ token.value ] );
+                        methodBuilder.addOpcode( Opcode.getproperty, [ publicPropertyLate ] );
+//                        methodBuilder.addOpcode( Opcode.getlocal_1 );
+//                        methodBuilder.addOpcode( Opcode.getproperty, [ publicPropertyLate ] );
                         break;
 
                     case Token.NUMERIC:
@@ -111,6 +130,21 @@ package com.dz015.expressions.compilers
                             case '-':
                                 methodBuilder.addOpcode( Opcode.subtract );
                                 break;
+                            case '<':
+                                methodBuilder.addOpcode( Opcode.lessthan );
+                                break;
+                            case '>':
+                                methodBuilder.addOpcode( Opcode.greaterthan );
+                                break;
+                            case '<=':
+                                methodBuilder.addOpcode( Opcode.lessequals );
+                                break;
+                            case '>=':
+                                methodBuilder.addOpcode( Opcode.greaterequals );
+                                break;
+                            case '=':
+                                methodBuilder.addOpcode( Opcode.equals );
+                                break;
                         }
                         break;
                 }
@@ -135,7 +169,7 @@ package com.dz015.expressions.compilers
 
         private function loadedHandler( event:Event ):void
         {
-            dispatchEvent( new CompilerEvent( CompilerEvent.COMPILE_COMPLETE, Class( getDefinitionByName( "com.classes.generated.RuntimeClass" + _classNumber++ ) ) ) );
+            dispatchEvent( new CompilerEvent( CompilerEvent.COMPILE_COMPLETE, Class( getDefinitionByName( "com.classes.generated.FilterClass" + _classNumber++ ) ) ) );
         }
     }
 
