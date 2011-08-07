@@ -8,6 +8,7 @@ package com.dz015.expressions
     import mx.collections.ArrayCollection;
 
     import org.flexunit.asserts.assertEquals;
+    import org.flexunit.asserts.assertTrue;
     import org.flexunit.async.Async;
 
     public class FilterFunctionTests
@@ -41,6 +42,13 @@ package com.dz015.expressions
 
         [Test(async)]
         public function test1():void
+        {
+            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 1 );
+            generateFilterFunction( "income=1" );
+        }
+
+        [Test(async)]
+        public function test2():void
         {
             Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 5 );
             generateFilterFunction( "income-outgoing>0" );

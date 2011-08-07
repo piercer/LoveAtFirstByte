@@ -11,8 +11,6 @@ package com.dz015.expressions.compilers
     import flash.events.IOErrorEvent;
     import flash.utils.getDefinitionByName;
 
-    import org.as3commons.bytecode.abc.AbcFile;
-    import org.as3commons.bytecode.abc.ConstantPool;
     import org.as3commons.bytecode.abc.LNamespace;
     import org.as3commons.bytecode.abc.MultinameL;
     import org.as3commons.bytecode.abc.NamespaceSet;
@@ -22,9 +20,7 @@ package com.dz015.expressions.compilers
     import org.as3commons.bytecode.emit.IAbcBuilder;
     import org.as3commons.bytecode.emit.IClassBuilder;
     import org.as3commons.bytecode.emit.IMethodBuilder;
-    import org.as3commons.bytecode.emit.IPackageBuilder;
     import org.as3commons.bytecode.emit.impl.AbcBuilder;
-    import org.as3commons.bytecode.swf.AbcClassLoader;
 
     [Event(name="compileComplete", type="com.dz015.expressions.compilers.CompilerEvent")]
     public class FilterFunctionCompiler extends EventDispatcher
@@ -40,14 +36,11 @@ package com.dz015.expressions.compilers
         public function compile( expression:String, tokeniser:IExpressionTokeniser ):void
         {
 
-            //var abcFile:AbcFile = new AbcFile();
-            //abcFile.constantPool = new ConstantPool();
+            var abcBuilder:IAbcBuilder = new AbcBuilder();
+            var classBuilder:IClassBuilder = abcBuilder.definePackage( "com.classes.generated" ).defineClass( "FilterClass" + _classNumber );
 
-            var abcBuilder:IAbcBuilder = new AbcBuilder( abcFile );
-            var packageBuilder:IPackageBuilder = abcBuilder.definePackage( "com.classes.generated" );
-            var classBuilder:IClassBuilder = packageBuilder.defineClass( "FilterClass" + _classNumber );
-
-            var methodBuilder:IMethodBuilder = classBuilder.defineMethod( "filterFunction" );
+            var methodBuilder:IMethodBuilder = classBuilder.defineMethod();
+            methodBuilder.name = "filterFunction";
             methodBuilder.defineArgument( "Object" );
             methodBuilder.returnType = "Boolean";
 
@@ -67,20 +60,14 @@ package com.dz015.expressions.compilers
             methodBuilder.addOpcode( Opcode.getlex, [ math ] );
             methodBuilder.addOpcode( Opcode.setlocal_2 );
 
-            classBuilder.constantPool = packageBuilder.constantPool;
-
             for each ( var token:Token in outputStack.stack )
             {
                 switch ( token.type )
                 {
                     case Token.SYMBOL:
-                        var index:int = classBuilder.constantPool.addString( token.value );
                         methodBuilder.addOpcode( Opcode.getlocal_1 );
-//                        methodBuilder.addOpcode( Opcode.pushstring, [ token.value ] );
                         methodBuilder.addOpcode( Opcode.pushstring, [ token.value ] );
                         methodBuilder.addOpcode( Opcode.getproperty, [ publicPropertyLate ] );
-//                        methodBuilder.addOpcode( Opcode.getlocal_1 );
-//                        methodBuilder.addOpcode( Opcode.getproperty, [ publicPropertyLate ] );
                         break;
 
                     case Token.NUMERIC:
@@ -152,14 +139,11 @@ package com.dz015.expressions.compilers
             }
             methodBuilder.addOpcode( Opcode.returnvalue );
 
-            var abcFile:AbcFile = abcBuilder.build();
-            var abcLoader:AbcClassLoader = new AbcClassLoader();
+            abcBuilder.addEventListener( Event.COMPLETE, loadedHandler );
+            abcBuilder.addEventListener( IOErrorEvent.IO_ERROR, errorHandler );
+            abcBuilder.addEventListener( IOErrorEvent.VERIFY_ERROR, errorHandler );
 
-            abcLoader.addEventListener( Event.COMPLETE, loadedHandler );
-            abcLoader.addEventListener( IOErrorEvent.IO_ERROR, errorHandler );
-            abcLoader.addEventListener( IOErrorEvent.VERIFY_ERROR, errorHandler );
-
-            abcLoader.loadAbcFile( abcFile );
+            abcBuilder.buildAndLoad();
         }
 
         private function errorHandler( event:IOErrorEvent ):void
