@@ -1,28 +1,29 @@
-package
+package com.dz015.expressions.shuntyard
 {
 
-    import com.dz015.expressions.shuntyard.InfixToPostfixConverter;
+    import com.dz015.expressions.tokens.DefaultExpressionTokeniser;
+    import com.dz015.expressions.tokens.DefaultOperatorTokenFactory;
     import com.dz015.expressions.tokens.TokenStack;
 
     import org.flexunit.asserts.assertEquals;
-
     import org.flexunit.runners.Parameterized;
+
     Parameterized;
 
     [RunWith("org.flexunit.runners.Parameterized")]
-    public class InfixToPostfixConverterTest
+    public class DefaultInfixToPostfixConverterTest
     {
 
         private var _converter:InfixToPostfixConverter;
 
-        public function InfixToPostfixConverterTest()
+        public function DefaultInfixToPostfixConverterTest()
         {
         }
 
         [Before]
         public function setup():void
         {
-            _converter = new InfixToPostfixConverter();
+            _converter = new InfixToPostfixConverter( new DefaultExpressionTokeniser( new DefaultOperatorTokenFactory() ) );
         }
 
         public static function testStatements():Array
@@ -43,7 +44,7 @@ package
         }
 
         [Test(dataProvider="testStatements")]
-        public function testConverter( infix:String,  postfix:String):void
+        public function testConverter( infix:String, postfix:String ):void
         {
             var result:TokenStack = _converter.convert( infix );
             assertEquals( postfix, result.toString() );

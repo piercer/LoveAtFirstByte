@@ -1,4 +1,4 @@
-package com.dz015.expressions.compiler
+package com.dz015.expressions.compilers
 {
 
     import com.dz015.expressions.shuntyard.InfixToPostfixConverter;
@@ -23,7 +23,7 @@ package com.dz015.expressions.compiler
     import org.as3commons.bytecode.emit.impl.MethodArgument;
     import org.as3commons.bytecode.swf.AbcClassLoader;
 
-    [Event(name="compileComplete", type="com.dz015.expressions.compiler.CompilerEvent")]
+    [Event(name="compileComplete", type="com.dz015.expressions.compilers.CompilerEvent")]
     public class ExpressionCompiler extends EventDispatcher
     {
 

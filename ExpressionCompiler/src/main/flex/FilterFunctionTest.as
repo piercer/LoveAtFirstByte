@@ -13,15 +13,15 @@ package
     import flash.utils.getTimer;
 
     [SWF(backgroundColor="#FF0000",height="500",width="500",frameRate="60")]
-    public class MathTest extends Sprite
+    public class FilterFunctionTest extends Sprite
     {
 
         private var _time:int;
 
-        public function MathTest()
+        public function FilterFunctionTest()
         {
 
-            var expression:String = "(2*sin(5+4*cos(x)))/10";
+            var expression:String = "(income-outcome)>0";
             var tokeniser:IExpressionTokeniser = new DefaultExpressionTokeniser( new DefaultOperatorTokenFactory() );
 
             var converter:InfixToPostfixConverter = new InfixToPostfixConverter( tokeniser );

@@ -1,16 +1,14 @@
-package
+package com.dz015.expressions.tokens
 {
-    import com.dz015.expressions.tokens.IExpressionTokeniser;
-    import com.dz015.expressions.tokens.Token;
 
     import org.flexunit.asserts.assertEquals;
 
-    public class ExpressionTokeniserTest
+    public class FilterFunctionExpressionTokeniserTest
     {
 
         private var _tokeniser:IExpressionTokeniser;
 
-        public function ExpressionTokeniserTest()
+        public function FilterFunctionExpressionTokeniserTest()
         {
         }
 

@@ -1,4 +1,4 @@
-package com.dz015.expressions.compiler{
+package com.dz015.expressions.compilers{
 	import flash.events.Event;
 	
 	public class CompilerEvent extends Event
