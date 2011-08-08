@@ -15,6 +15,7 @@ com.dz015.expressions.tokens{
         public function tokenise( s:String ):Vector.<Token>
         {
             var tokens:Vector.<Token> = new Vector.<Token>();
+
             var match:Array = _tokeniser.exec( s );
 
             while ( match != null )

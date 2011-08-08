@@ -74,6 +74,41 @@ package
                                 var n2:Number = _stack.pop();
                                 _stack.push( n2 - n1 );
                                 break;
+                            case '>':
+                                var n1:Number = _stack.pop();
+                                var n2:Number = _stack.pop();
+                                _stack.push( n2 > n1 );
+                                break;
+                            case '<':
+                                var n1:Number = _stack.pop();
+                                var n2:Number = _stack.pop();
+                                _stack.push( n2 < n1 );
+                                break;
+                            case '>=':
+                                var n1:Number = _stack.pop();
+                                var n2:Number = _stack.pop();
+                                _stack.push( n2 >= n1 );
+                                break;
+                            case '<=':
+                                var n1:Number = _stack.pop();
+                                var n2:Number = _stack.pop();
+                                _stack.push( n2 <= n1 );
+                                break;
+                            case '>':
+                                var n1:Number = _stack.pop();
+                                var n2:Number = _stack.pop();
+                                _stack.push( n2 > n1 );
+                                break;
+                            case '=':
+                                _stack.push( _stack.pop() == _stack.pop() );
+                                break;
+                            case '&':
+                                _stack.push( _stack.pop() && _stack.pop() );
+                                break;
+                            case '|':
+                                _stack.push( _stack.pop() || _stack.pop() );
+                                break;
+
                         }
                         break;
                 }

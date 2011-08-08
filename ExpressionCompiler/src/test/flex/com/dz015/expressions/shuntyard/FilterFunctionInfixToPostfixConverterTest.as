@@ -43,7 +43,9 @@ package com.dz015.expressions.shuntyard
                 [ "income>outgoings", "income outgoings >"],
                 [ "income>=outgoings", "income outgoings >="],
                 [ "income=outgoings", "income outgoings ="],
-                [ "3*profit-loss/2>profit/income", "3 profit * loss 2 / - profit income / >"]
+                [ "3*profit-loss/2>profit/income", "3 profit * loss 2 / - profit income / >"],
+                [ "profit>0 and loss>0", "profit 0 > loss 0 > &"],
+                [ "profit>0 or loss>0", "profit 0 > loss 0 > |"]
             ];
         }
 

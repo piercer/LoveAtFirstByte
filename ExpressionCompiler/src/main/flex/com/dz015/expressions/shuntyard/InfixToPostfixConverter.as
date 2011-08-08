@@ -20,7 +20,7 @@ com.dz015.expressions.shuntyard{
             var outputStack:TokenStack = new TokenStack();
             var operatorStack:TokenStack = new TokenStack();
 
-            var tokens:Vector.<Token> = _tokeniser.tokenise( expression.replace( ' ', '' ) );
+            var tokens:Vector.<Token> = _tokeniser.tokenise( expression.replace(' and ','&').replace(' or ','|').replace( ' ', '' ) );
             var topToken:Token;
 
             for each ( var token:Token in tokens )

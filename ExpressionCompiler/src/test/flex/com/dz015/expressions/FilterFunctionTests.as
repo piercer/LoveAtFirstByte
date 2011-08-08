@@ -54,6 +54,34 @@ package com.dz015.expressions
             generateFilterFunction( "income-outgoing>0" );
         }
 
+        [Test(async)]
+        public function test3():void
+        {
+            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 10 );
+            generateFilterFunction( "weighting=2 or weighting=1" );
+        }
+
+        [Test(async)]
+        public function test4():void
+        {
+            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 0 );
+            generateFilterFunction( "weighting=2 and weighting=1" );
+        }
+
+        [Test(async)]
+        public function test5():void
+        {
+            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 0 );
+            generateFilterFunction( "income-outgoing>0 and weighting=2" );
+        }
+
+        [Test(async)]
+        public function test6():void
+        {
+            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 10 );
+            generateFilterFunction( "income-outgoing>0 or weighting=2" );
+        }
+
         private function generateFilterFunction( filterExpression:String ):void
         {
             _filterFunctionCompiler.compile( filterExpression, new FilterFunctionTokeniser( new FilterFunctionOperatorTokenFactory() ) );
@@ -66,7 +94,6 @@ package com.dz015.expressions
             _data.filterFunction = filterer.filterFunction;
             _data.refresh();
             assertEquals( "Data is not filtered correctly", length, _data.length );
-
         }
 
     }

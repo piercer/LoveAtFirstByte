@@ -17,16 +17,16 @@ package com.dz015.expressions.tokens
 
                 case '+':
                 case '-':
-                    operatorToken = new Token( symbol, Token.OPERATOR, 1, Token.LEFT_ASSOCIATIVE );
+                    operatorToken = new Token( symbol, Token.OPERATOR, 2, Token.LEFT_ASSOCIATIVE );
                     break;
 
                 case '*':
                 case '/':
-                    operatorToken = new Token( symbol, Token.OPERATOR, 2, Token.LEFT_ASSOCIATIVE );
+                    operatorToken = new Token( symbol, Token.OPERATOR, 3, Token.LEFT_ASSOCIATIVE );
                     break;
 
                 case '^':
-                    operatorToken = new Token( symbol, Token.OPERATOR, 3, Token.RIGHT_ASSOCIATIVE );
+                    operatorToken = new Token( symbol, Token.OPERATOR, 4, Token.RIGHT_ASSOCIATIVE );
                     break;
 
                 case '>':
@@ -34,7 +34,7 @@ package com.dz015.expressions.tokens
                 case '=':
                 case '>=':
                 case '<=':
-                    operatorToken = new Token( symbol, Token.OPERATOR, 0, Token.RIGHT_ASSOCIATIVE );
+                    operatorToken = new Token( symbol, Token.OPERATOR, 1, Token.RIGHT_ASSOCIATIVE );
                     break;
 
                 case '(':
@@ -43,6 +43,11 @@ package com.dz015.expressions.tokens
 
                 case ')':
                     operatorToken = new Token( symbol, Token.RIGHT_BRACKET );
+                    break;
+
+                case '&':
+                case '|':
+                    operatorToken = new Token( symbol, Token.OPERATOR, 0, Token.RIGHT_ASSOCIATIVE );
                     break;
 
             }

@@ -132,6 +132,12 @@ package com.dz015.expressions.compilers
                             case '=':
                                 methodBuilder.addOpcode( Opcode.equals );
                                 break;
+                            case '&':
+                                methodBuilder.addOpcode( Opcode.bitand );
+                                break;
+                            case '|':
+                                methodBuilder.addOpcode( Opcode.bitor );
+                                break;
                         }
                         break;
                 }
