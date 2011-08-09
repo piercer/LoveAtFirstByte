@@ -2,44 +2,51 @@ package
 {
 
     import com.dz015.expressions.compilers.CompilerEvent;
-    import com.dz015.expressions.compilers.ExpressionCompiler;
+    import com.dz015.expressions.compilers.FilterFunctionCompiler;
     import com.dz015.expressions.shuntyard.InfixToPostfixConverter;
-    import com.dz015.expressions.tokens.DefaultExpressionTokeniser;
-    import com.dz015.expressions.tokens.DefaultOperatorTokenFactory;
+    import com.dz015.expressions.tokens.FilterFunctionOperatorTokenFactory;
+    import com.dz015.expressions.tokens.FilterFunctionTokeniser;
     import com.dz015.expressions.tokens.IExpressionTokeniser;
     import com.dz015.expressions.tokens.TokenStack;
 
     import flash.display.Sprite;
     import flash.utils.getTimer;
 
+    import mx.collections.ArrayCollection;
+
     [SWF(backgroundColor="#FF0000",height="500",width="500",frameRate="60")]
     public class FilterFunctionTest extends Sprite
     {
 
         private var _time:int;
+        private var _data:ArrayCollection;
 
         public function FilterFunctionTest()
         {
 
-            var expression:String = "(income-outcome)>0";
-            var tokeniser:IExpressionTokeniser = new DefaultExpressionTokeniser( new DefaultOperatorTokenFactory() );
+            var expression:String = "a>b and b>c or a<c";
+            var tokeniser:IExpressionTokeniser = new FilterFunctionTokeniser( new FilterFunctionOperatorTokenFactory() );
 
             var converter:InfixToPostfixConverter = new InfixToPostfixConverter( tokeniser );
             var tokenStack:TokenStack = converter.convert( expression );
 
-            var simulator:VMSimulator = new VMSimulator( tokenStack.stack );
+            var simulator:FilterFunctionVMSimulator = new FilterFunctionVMSimulator( tokenStack.stack );
 
-            trace("Test Value: Interpreted ",simulator.f(5));
-            _time = getTimer();
-            for ( var i:uint = 0; i < 1000000; i++ )
+            _data = new ArrayCollection();
+            var i:uint;
+            for ( i = 0; i < 200000; i++ )
             {
-                simulator.f( 3 );
+                _data.addItem( { a: Math.random(), b: Math.random(), c:Math.random() } );
             }
+
+            _data.filterFunction = simulator.filterFunction;
+            _time = getTimer();
+            _data.refresh();
             trace( "Calculating with interpreted expression took", getTimer() - _time, "ms" );
 
 
             _time = getTimer();
-            var compiler:ExpressionCompiler = new ExpressionCompiler();
+            var compiler:FilterFunctionCompiler = new FilterFunctionCompiler();
             compiler.addEventListener( CompilerEvent.COMPILE_COMPLETE, onCompilerComplete )
             compiler.compile( expression, tokeniser );
 
@@ -50,18 +57,12 @@ package
             trace( "Compiling took", getTimer() - _time, "ms" );
             var functionClass:Class = event.klass;
             var instance:* = new functionClass();
-            trace("Test Value: Compiled ",instance.f(5));
+
+            _data.filterFunction = instance.filterFunction;
             _time = getTimer();
-            for ( var i:uint = 0; i < 1000000; i++ )
-            {
-                instance.f( 3 );
-            }
+            _data.refresh();
             trace( "Calculating with compiled expression took", getTimer() - _time, "ms" );
         }
 
-        public function filterFunction(item:Object):Boolean
-        {
-            return (item["field1"]+item["field2"]) > 3;
-        }
     }
 }
