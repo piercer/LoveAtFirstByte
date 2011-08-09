@@ -1,4 +1,4 @@
-package com.dz015.expressions
+package com.dz015.expressions.tokens.filterfunction
 {
     public class FilterFunctionTestObject
     {

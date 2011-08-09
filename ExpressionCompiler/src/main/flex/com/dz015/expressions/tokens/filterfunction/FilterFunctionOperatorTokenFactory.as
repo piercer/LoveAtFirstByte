@@ -1,5 +1,6 @@
-package com.dz015.expressions.tokens
+package com.dz015.expressions.tokens.filterfunction
 {
+    import com.dz015.expressions.tokens.*;
 
     public class FilterFunctionOperatorTokenFactory implements IOperatorTokenFactory
     {

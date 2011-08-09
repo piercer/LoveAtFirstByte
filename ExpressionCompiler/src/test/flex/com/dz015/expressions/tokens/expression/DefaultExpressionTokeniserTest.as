@@ -1,5 +1,6 @@
-package com.dz015.expressions.tokens
+package com.dz015.expressions.tokens.expression
 {
+    import com.dz015.expressions.tokens.*;
 
     import org.flexunit.asserts.assertEquals;
 

@@ -1,8 +1,8 @@
 package com.dz015.expressions.shuntyard
 {
 
-    import com.dz015.expressions.tokens.DefaultExpressionTokeniser;
-    import com.dz015.expressions.tokens.DefaultOperatorTokenFactory;
+    import com.dz015.expressions.tokens.expression.DefaultExpressionTokeniser;
+    import com.dz015.expressions.tokens.expression.DefaultOperatorTokenFactory;
     import com.dz015.expressions.tokens.TokenStack;
 
     import org.flexunit.asserts.assertEquals;

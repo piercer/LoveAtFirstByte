@@ -1,9 +1,9 @@
-package com.dz015.expressions
+package com.dz015.expressions.tokens.filterfunction
 {
     import com.dz015.expressions.compilers.CompilerEvent;
     import com.dz015.expressions.compilers.FilterFunctionCompiler;
-    import com.dz015.expressions.tokens.FilterFunctionOperatorTokenFactory;
-    import com.dz015.expressions.tokens.FilterFunctionTokeniser;
+    import com.dz015.expressions.tokens.filterfunction.FilterFunctionOperatorTokenFactory;
+    import com.dz015.expressions.tokens.filterfunction.FilterFunctionTokeniser;
 
     import mx.collections.ArrayCollection;
 

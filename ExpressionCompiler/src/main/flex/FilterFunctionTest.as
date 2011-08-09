@@ -4,8 +4,8 @@ package
     import com.dz015.expressions.compilers.CompilerEvent;
     import com.dz015.expressions.compilers.FilterFunctionCompiler;
     import com.dz015.expressions.shuntyard.InfixToPostfixConverter;
-    import com.dz015.expressions.tokens.FilterFunctionOperatorTokenFactory;
-    import com.dz015.expressions.tokens.FilterFunctionTokeniser;
+    import com.dz015.expressions.tokens.filterfunction.FilterFunctionOperatorTokenFactory;
+    import com.dz015.expressions.tokens.filterfunction.FilterFunctionTokeniser;
     import com.dz015.expressions.tokens.IExpressionTokeniser;
     import com.dz015.expressions.tokens.TokenStack;
 

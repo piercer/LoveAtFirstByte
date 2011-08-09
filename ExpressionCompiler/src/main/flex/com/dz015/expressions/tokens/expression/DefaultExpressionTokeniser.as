@@ -1,21 +1,21 @@
 package
-com.dz015.expressions.tokens{
-    public class FilterFunctionTokeniser implements IExpressionTokeniser
+com.dz015.expressions.tokens.expression{
+    import com.dz015.expressions.tokens.*;
+    public class DefaultExpressionTokeniser implements IExpressionTokeniser
     {
 
         private var _tokeniser:RegExp;
         private var _operatorTokenFactory:IOperatorTokenFactory;
 
-        public function FilterFunctionTokeniser( operatorTokenFactory:IOperatorTokenFactory )
+        public function DefaultExpressionTokeniser( operatorTokenFactory:IOperatorTokenFactory )
         {
             _operatorTokenFactory = operatorTokenFactory;
-            _tokeniser = /\s*(sin|tan|cos)|(\d+)|(\w+)|(<=|>=|.)/g;
+            _tokeniser = /\s*(sin|tan|cos)|(\d+)|(\w+)|(.)/g;
         }
 
         public function tokenise( s:String ):Vector.<Token>
         {
             var tokens:Vector.<Token> = new Vector.<Token>();
-
             var match:Array = _tokeniser.exec( s );
 
             while ( match != null )

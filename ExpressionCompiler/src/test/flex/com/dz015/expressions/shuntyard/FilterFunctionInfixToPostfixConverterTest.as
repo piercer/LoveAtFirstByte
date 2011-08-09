@@ -1,8 +1,8 @@
 package com.dz015.expressions.shuntyard
 {
 
-    import com.dz015.expressions.tokens.FilterFunctionOperatorTokenFactory;
-    import com.dz015.expressions.tokens.FilterFunctionTokeniser;
+    import com.dz015.expressions.tokens.filterfunction.FilterFunctionOperatorTokenFactory;
+    import com.dz015.expressions.tokens.filterfunction.FilterFunctionTokeniser;
     import com.dz015.expressions.tokens.TokenStack;
 
     import org.flexunit.asserts.assertEquals;

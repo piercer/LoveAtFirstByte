@@ -4,8 +4,8 @@ package
     import com.dz015.expressions.compilers.CompilerEvent;
     import com.dz015.expressions.compilers.ExpressionCompiler;
     import com.dz015.expressions.shuntyard.InfixToPostfixConverter;
-    import com.dz015.expressions.tokens.DefaultExpressionTokeniser;
-    import com.dz015.expressions.tokens.DefaultOperatorTokenFactory;
+    import com.dz015.expressions.tokens.expression.DefaultExpressionTokeniser;
+    import com.dz015.expressions.tokens.expression.DefaultOperatorTokenFactory;
     import com.dz015.expressions.tokens.IExpressionTokeniser;
     import com.dz015.expressions.tokens.TokenStack;
 
