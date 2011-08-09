@@ -2,15 +2,16 @@ package com.dz015.expressions.tokens.filterfunction
 {
     import com.dz015.expressions.compilers.CompilerEvent;
     import com.dz015.expressions.compilers.FilterFunctionCompiler;
-    import com.dz015.expressions.tokens.filterfunction.FilterFunctionOperatorTokenFactory;
-    import com.dz015.expressions.tokens.filterfunction.FilterFunctionTokeniser;
 
     import mx.collections.ArrayCollection;
 
     import org.flexunit.asserts.assertEquals;
-    import org.flexunit.asserts.assertTrue;
     import org.flexunit.async.Async;
+    import org.flexunit.runners.Parameterized;
 
+    Parameterized;
+
+    [RunWith("org.flexunit.runners.Parameterized")]
     public class FilterFunctionTests
     {
 
@@ -40,51 +41,23 @@ package com.dz015.expressions.tokens.filterfunction
             _filterFunctionCompiler = new FilterFunctionCompiler();
         }
 
-        [Test(async)]
-        public function test1():void
+        public static function testFilters():Array
         {
-            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 1 );
-            generateFilterFunction( "income=1" );
+            return [
+                [ "income=1", 1 ],
+                [ "income-outgoing>0", 5 ],
+                [ "weighting=2 or weighting=1", 10 ],
+                [ "weighting=2 and weighting=1", 0 ],
+                [ "income-outgoing>0 and weighting=2", 0 ],
+                [ "income-outgoing>0 or weighting=2", 10 ]
+            ];
         }
 
-        [Test(async)]
-        public function test2():void
+        [Test(async,dataProvider="testFilters")]
+        public function testFilter( filter:String,  nPassing:uint ):void
         {
-            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 5 );
-            generateFilterFunction( "income-outgoing>0" );
-        }
-
-        [Test(async)]
-        public function test3():void
-        {
-            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 10 );
-            generateFilterFunction( "weighting=2 or weighting=1" );
-        }
-
-        [Test(async)]
-        public function test4():void
-        {
-            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 0 );
-            generateFilterFunction( "weighting=2 and weighting=1" );
-        }
-
-        [Test(async)]
-        public function test5():void
-        {
-            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 0 );
-            generateFilterFunction( "income-outgoing>0 and weighting=2" );
-        }
-
-        [Test(async)]
-        public function test6():void
-        {
-            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, 10 );
-            generateFilterFunction( "income-outgoing>0 or weighting=2" );
-        }
-
-        private function generateFilterFunction( filterExpression:String ):void
-        {
-            _filterFunctionCompiler.compile( filterExpression, new FilterFunctionTokeniser( new FilterFunctionOperatorTokenFactory() ) );
+            Async.handleEvent( this, _filterFunctionCompiler, CompilerEvent.COMPILE_COMPLETE, testFilteredDataIsCorrectLength, 1000, nPassing );
+            _filterFunctionCompiler.compile( filter, new FilterFunctionTokeniser( new FilterFunctionOperatorTokenFactory() ) );
         }
 
         private function testFilteredDataIsCorrectLength( event:CompilerEvent, length:uint ):void
