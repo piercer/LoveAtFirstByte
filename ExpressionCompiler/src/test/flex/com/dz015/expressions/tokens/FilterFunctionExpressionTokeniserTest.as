@@ -83,7 +83,7 @@ package com.dz015.expressions.tokens
         [Test]
         public function testGreaterThan():void
         {
-            var result:Vector.<Token> = _tokeniser.tokenise( "y > 3" );
+            var result:Vector.<Token> = _tokeniser.tokenise( "y>3" );
             assertEquals( "Wrong number of tokens returned with simple string", 3, result.length );
             assertEquals( "Wrong token value returned with simple string", "y", result[0].value );
             assertEquals( "Wrong token type returned with simple string", Token.SYMBOL, result[0].type );

@@ -11,7 +11,6 @@ package com.dz015.expressions.compilers
     import flash.events.IOErrorEvent;
     import flash.utils.getDefinitionByName;
 
-    import org.as3commons.bytecode.abc.AbcFile;
     import org.as3commons.bytecode.abc.LNamespace;
     import org.as3commons.bytecode.abc.QualifiedName;
     import org.as3commons.bytecode.abc.enum.Opcode;
@@ -20,8 +19,6 @@ package com.dz015.expressions.compilers
     import org.as3commons.bytecode.emit.IMethodBuilder;
     import org.as3commons.bytecode.emit.IPackageBuilder;
     import org.as3commons.bytecode.emit.impl.AbcBuilder;
-    import org.as3commons.bytecode.emit.impl.MethodArgument;
-    import org.as3commons.bytecode.swf.AbcClassLoader;
 
     [Event(name="compileComplete", type="com.dz015.expressions.compilers.CompilerEvent")]
     public class ExpressionCompiler extends EventDispatcher
@@ -118,14 +115,12 @@ package com.dz015.expressions.compilers
             }
             methodBuilder.addOpcode( Opcode.returnvalue );
 
-            var abcFile:AbcFile = abcBuilder.build();
-            var abcLoader:AbcClassLoader = new AbcClassLoader();
+            abcBuilder.addEventListener( Event.COMPLETE, loadedHandler );
+            abcBuilder.addEventListener( IOErrorEvent.IO_ERROR, errorHandler );
+            abcBuilder.addEventListener( IOErrorEvent.VERIFY_ERROR, errorHandler );
 
-            abcLoader.addEventListener( Event.COMPLETE, loadedHandler );
-            abcLoader.addEventListener( IOErrorEvent.IO_ERROR, errorHandler );
-            abcLoader.addEventListener( IOErrorEvent.VERIFY_ERROR, errorHandler );
+            abcBuilder.buildAndLoad();
 
-            abcLoader.loadAbcFile( abcFile );
         }
 
         private function errorHandler( event:IOErrorEvent ):void

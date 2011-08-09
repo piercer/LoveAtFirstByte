@@ -13,7 +13,7 @@ package
             _instructions = instructions;
         }
 
-        public function filterFunction( item:Object ):Number
+        public function filterFunction( item:Object ):Boolean
         {
             var n1:Number;
             var n2:Number;
