@@ -2,8 +2,12 @@
 <s:Application
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns:s="library://ns.adobe.com/flex/spark"
-        creationComplete="populateDataGrid()"
+        creationComplete="onCreationComplete()"
         >
+
+    <fx:Declarations>
+        <s:RadioButtonGroup id="filterType"/>
+    </fx:Declarations>
 
     <s:layout>
         <s:HorizontalLayout/>
@@ -27,30 +31,108 @@
 
         <s:TextInput id="filterInput" width="90%" left="10"/>
 
-        <s:RadioButton label="Use Compiled Filter" groupName="filterType"/>
-        <s:RadioButton label="Use Interpreted Filter" groupName="filterType" selected="true"/>
+        <s:RadioButton label="Use Compiled Filter" group="{filterType}" value="compiled"/>
+        <s:RadioButton label="Use Interpreted Filter" group="{filterType}" value="interpreted" selected="true"/>
 
-        <s:Button label="Filter"/>
-        <s:Button label="Clear Filter"/>
+        <s:Button label="Filter" click="onFilterButtonClick(event)"/>
+        <s:Button label="Clear Filter" click="onClearFilterClicked(event)"/>
+
+        <s:Label id="compileTimeDisplay"/>
+        <s:Label id="timeTakenDisplay"/>
 
     </s:Group>
 
     <fx:Script>
         <![CDATA[
+        import com.dz015.expressions.compilers.CompilerEvent;
+        import com.dz015.expressions.compilers.FilterFunctionCompiler;
+        import com.dz015.expressions.shuntyard.InfixToPostfixConverter;
+        import com.dz015.expressions.tokens.IExpressionTokeniser;
+        import com.dz015.expressions.tokens.TokenStack;
+        import com.dz015.expressions.tokens.filterfunction.FilterFunctionOperatorTokenFactory;
+        import com.dz015.expressions.tokens.filterfunction.FilterFunctionTokeniser;
+
         import mx.collections.ArrayCollection;
 
         private var _data:ArrayCollection;
+        private var _compiler:FilterFunctionCompiler;
+        private var _tokeniser:IExpressionTokeniser;
+        private var _converter:InfixToPostfixConverter;
 
-        private function populateDataGrid():void
+        private var _time:int;
+
+        private function onCreationComplete():void
         {
+            //
+            // Populate Datagrid
+            //
             _data = new ArrayCollection();
             var i:uint;
-            for ( i = 0; i < 20000; i++ )
+            for ( i = 0; i < 50000; i++ )
             {
                 _data.addItem( { a: Math.random(), b: Math.random(), c:Math.random() } );
             }
             dataGrid.dataProvider = _data;
+            //
+            // Create compiler, and converter
+            //
+            _compiler = new FilterFunctionCompiler();
+            _tokeniser = new FilterFunctionTokeniser( new FilterFunctionOperatorTokenFactory() );
+            _converter = new InfixToPostfixConverter( _tokeniser );
+            _compiler.addEventListener( CompilerEvent.COMPILE_COMPLETE, onCompilerComplete )
         }
+
+        private function onFilterButtonClick( event:MouseEvent ):void
+        {
+            if ( filterType.selectedValue=="interpreted" )
+            {
+                compileTimeDisplay.text = "";
+                filterUsingVMSimulator();
+            }
+            else
+            {
+                filterUsingCompiler();
+            }
+        }
+
+        private function filterUsingVMSimulator():void
+        {
+            var tokenStack:TokenStack = _converter.convert( filterInput.text );
+            var simulator:FilterFunctionVMSimulator = new FilterFunctionVMSimulator( tokenStack.stack );
+
+            _data.filterFunction = simulator.filterFunction;
+            _time = getTimer();
+            _data.refresh();
+            timeTakenDisplay.text="Interpreted took " + (getTimer() - _time) + " ms" ;
+
+        }
+
+        private function filterUsingCompiler():void
+        {
+            _time = getTimer();
+            var compiler:FilterFunctionCompiler = new FilterFunctionCompiler();
+            compiler.addEventListener( CompilerEvent.COMPILE_COMPLETE, onCompilerComplete );
+            compiler.compile( filterInput.text, _tokeniser );
+        }
+
+        private function onCompilerComplete( event:CompilerEvent ):void
+        {
+           compileTimeDisplay.text = "Compiling took " + (getTimer() - _time) + " ms";
+            var functionClass:Class = event.klass;
+            var instance:* = new functionClass();
+
+            _data.filterFunction = instance.filterFunction;
+            _time = getTimer();
+            _data.refresh();
+            timeTakenDisplay.text="Compiled took "+ (getTimer() - _time)+ " ms";
+        }
+
+        private function onClearFilterClicked( event:MouseEvent ):void
+        {
+            _data.filterFunction = null;
+            _data.refresh();
+        }
+
         ]]>
     </fx:Script>
 </s:Application>

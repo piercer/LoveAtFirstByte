@@ -44,10 +44,9 @@ package
             _data.refresh();
             trace( "Calculating with interpreted expression took", getTimer() - _time, "ms" );
 
-
             _time = getTimer();
             var compiler:FilterFunctionCompiler = new FilterFunctionCompiler();
-            compiler.addEventListener( CompilerEvent.COMPILE_COMPLETE, onCompilerComplete )
+            compiler.addEventListener( CompilerEvent.COMPILE_COMPLETE, onCompilerComplete );
             compiler.compile( expression, tokeniser );
 
         }
