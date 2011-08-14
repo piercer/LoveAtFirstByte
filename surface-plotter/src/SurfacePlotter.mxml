@@ -29,6 +29,9 @@
             <s:Label id="compileTimeDisplay"/>
             <s:Label id="timeTakenDisplay"/>
 
+            <s:HSlider id="xMin" minimum="-5" maximum="5" value="-3" change="updateSurface(event)"/>
+            <s:HSlider id="xMax" minimum="-5" maximum="5" value="3" change="updateSurface(event)"/>
+
         </s:VGroup>
 
     </s:HGroup>
@@ -129,11 +132,18 @@
             compiler.compile( functionInput.text, _tokeniser );
         }
 
+        private var _generator:ISurfaceGenerator;
+
         private function onCompilerComplete( event:CompilerEvent ):void
         {
             var functionClass:Class = event.klass;
-            var instance:ISurfaceGenerator = new functionClass();
-            _surface.applyGenerator( instance, -3, 3, -3, 3, 30 );
+            _generator = new functionClass();
+            _surface.applyGenerator( _generator, xMin.value, xMax.value, -3, 3, 30 );
+        }
+
+        private function updateSurface( event:Event ):void
+        {
+            _surface.applyGenerator( _generator, xMin.value, xMax.value, -3, 3, 30 );
         }
         ]]>
     </fx:Script>
