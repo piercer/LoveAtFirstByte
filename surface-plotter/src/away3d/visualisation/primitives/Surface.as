@@ -164,8 +164,8 @@ package away3d.visualisation.primitives
                 for ( i = 0; i <= _nx; i++ )
                 {
                     var x:Number = xMin + i * _dx;
-                    var z:Number = generator.f( x, y, 1 );
-                    _heights[i + j * (_nx + 1)] = z * zScale;
+                    var z:Number = generator.f( x, y, zScale );
+                    _heights[i + j * (_nx + 1)] = z;
                 }
             }
             invalidateUVs();
