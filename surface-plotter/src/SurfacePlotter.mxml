@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<s:Application
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        addedToStage="createScene()"
+        backgroundAlpha="0"
+
+        xmlns:flex3d="away3d.flex.*"
+        >
+
+    <fx:Declarations>
+        <s:RadioButtonGroup id="generatorType"/>
+    </fx:Declarations>
+
+    <s:HGroup width="100%" height="100%">
+
+        <flex3d:Sprite3DVisualElement id="view3d" width="{width/2}" height="{height}"/>
+
+        <s:VGroup width="50%" height="100%" paddingTop="10" paddingRight="10" paddingBottom="10" paddingLeft="10">
+
+            <s:TextInput id="functionInput" width="90%" left="10"/>
+
+            <s:RadioButton label="Use Compiled Generator" group="{generatorType}" value="compiled"/>
+            <s:RadioButton label="Use Interpreted Generator" group="{generatorType}" value="interpreted"
+                           selected="true"/>
+
+            <s:Button label="Generate" click="onGenerateButtonClicked(event)"/>
+
+            <s:Label id="compileTimeDisplay"/>
+            <s:Label id="timeTakenDisplay"/>
+
+        </s:VGroup>
+
+    </s:HGroup>
+
+
+    <fx:Script>
+        <![CDATA[
+        import away3d.containers.ObjectContainer3D;
+        import away3d.lights.PointLight;
+        import away3d.materials.BitmapMaterial;
+        import away3d.materials.ColorMaterial;
+        import away3d.primitives.Plane;
+        import away3d.visualisation.axes.XYAxisGrid;
+        import away3d.visualisation.axes.XZAxisGrid;
+        import away3d.visualisation.axes.YZAxisGrid;
+        import away3d.visualisation.primitives.Surface;
+
+        import com.dz015.expressions.compilers.CompilerEvent;
+        import com.dz015.expressions.compilers.XYAExpressionCompiler;
+        import com.dz015.expressions.tokens.IExpressionTokeniser;
+        import com.dz015.expressions.tokens.expression.DefaultExpressionTokeniser;
+        import com.dz015.expressions.tokens.expression.DefaultOperatorTokenFactory;
+        import com.dz015.generators.ISurfaceGenerator;
+
+        private var _mesh1:Plane;
+        private var _mesh2:Plane;
+        private var _material1:BitmapMaterial;
+        private var _material2:BitmapMaterial;
+        private var _camController:HoverDragController;
+        private var _axes:ObjectContainer3D;
+        private var _tokeniser:IExpressionTokeniser;
+
+        private var _surface:Surface;
+
+        private function createScene():void
+        {
+
+            _axes = new ObjectContainer3D();
+
+            var xy:XYAxisGrid = new XYAxisGrid( -100, -100, 100, 100 );
+            xy.z = 100;
+            _axes.addChild( xy );
+
+            var xz:XZAxisGrid = new XZAxisGrid( -100, -100, 100, 100 );
+            xz.y = -100;
+            _axes.addChild( xz );
+
+            var yz:YZAxisGrid = new YZAxisGrid( -100, -100, 100, 100 );
+            yz.x = -100;
+            _axes.addChild( yz );
+
+            _camController = new HoverDragController( view3d.camera, stage );
+
+
+            //var pcm:PhongColoredContourMaterial = new PhongColoredContourMaterial();
+            var m:ColorMaterial = new ColorMaterial( 0xFF0000 );
+            //m.specularMethod = new BasicSpecularMethod();
+            m.gloss = 0.5;
+            m.specular = 0.5;
+            m.specularColor = 0xffffff;
+            m.ambientColor = 0x00ff00;
+            m.bothSides = true;
+            _surface = new Surface( m, 200, 200 );
+            _surface.x = -100;
+            _surface.y = -100;
+
+            _axes.addChild( _surface );
+
+            view3d.scene.addChild( _axes );
+
+            var light:PointLight = new PointLight();
+            light.x = -1000;
+            light.y = 1000;
+            light.z = -1000;
+            light.color = 0xFFFFFF;
+
+            view3d.scene.addChild( light );
+            view3d.camera.z = -50;
+            view3d.camera.y = -270;
+            //view3d.camera.lookAt( new Vector3D( 0, 0, 0 ) );
+
+            view3d.startRendering();
+
+            _tokeniser = new DefaultExpressionTokeniser( new DefaultOperatorTokenFactory() );
+
+        }
+
+        private function onGenerateButtonClicked( event:MouseEvent ):void
+        {
+            generateUsingCompiler();
+        }
+
+        private function generateUsingCompiler():void
+        {
+            //_time = getTimer();
+            var compiler:XYAExpressionCompiler = new XYAExpressionCompiler();
+            compiler.addEventListener( CompilerEvent.COMPILE_COMPLETE, onCompilerComplete );
+            compiler.compile( functionInput.text, _tokeniser );
+        }
+
+        private function onCompilerComplete( event:CompilerEvent ):void
+        {
+            var functionClass:Class = event.klass;
+            var instance:ISurfaceGenerator = new functionClass();
+            _surface.applyGenerator( instance, -3, 3, -3, 3, 30 );
+        }
+        ]]>
+    </fx:Script>
+
+</s:Application>

@@ -21,12 +21,12 @@ package com.dz015.expressions.compilers
     import org.as3commons.bytecode.emit.impl.AbcBuilder;
 
     [Event(name="compileComplete", type="com.dz015.expressions.compilers.CompilerEvent")]
-    public class ExpressionCompiler extends EventDispatcher
+    public class XExpressionCompiler extends EventDispatcher
     {
 
         private static var _classNumber:uint = 0;
 
-        public function ExpressionCompiler()
+        public function XExpressionCompiler()
         {
 
         }

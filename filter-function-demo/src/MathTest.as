@@ -2,7 +2,7 @@ package
 {
 
     import com.dz015.expressions.compilers.CompilerEvent;
-    import com.dz015.expressions.compilers.ExpressionCompiler;
+    import com.dz015.expressions.compilers.XExpressionCompiler;
     import com.dz015.expressions.shuntyard.InfixToPostfixConverter;
     import com.dz015.expressions.tokens.expression.DefaultExpressionTokeniser;
     import com.dz015.expressions.tokens.expression.DefaultOperatorTokenFactory;
@@ -39,7 +39,7 @@ package
 
 
             _time = getTimer();
-            var compiler:ExpressionCompiler = new ExpressionCompiler();
+            var compiler:XExpressionCompiler = new XExpressionCompiler();
             compiler.addEventListener( CompilerEvent.COMPILE_COMPLETE, onCompilerComplete )
             compiler.compile( expression, tokeniser );
 
