@@ -1,8 +1,9 @@
 package
 {
     import com.dz015.expressions.tokens.Token;
+    import com.dz015.generators.ISurfaceGenerator;
 
-    public class VMSimulator
+    public class VMSimulator implements ISurfaceGenerator
     {
         private var _instructions:Vector.<Token>;
 

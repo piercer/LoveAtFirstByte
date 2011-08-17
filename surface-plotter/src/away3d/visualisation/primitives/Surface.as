@@ -116,37 +116,41 @@ package away3d.visualisation.primitives
         {
             var i:int;
             var j:int;
-
             var uvData:Vector.<Number> = new Vector.<Number>();
-
-            for ( j = 0; j <= _ny; j++ )
+            if ( _heights )
             {
-                for ( i = 0; i <= _nx; i++ )
+
+
+
+                var zMin:Number = 0;
+                var zMax:Number = 0;
+
+                for ( i = 0; i < _nVertices; i++ )
                 {
-                    uvData.push( i / _nx, j / _ny );
+                    var z:Number = _heights[i];
+                    if ( z < zMin ) zMin = z;
+                    if ( z > zMax ) zMax = z;
+                }
+
+                var range:Number = zMax - zMin;
+                for ( i = 0; i < _nVertices; i++ )
+                {
+                    var diff:Number = target.vertexData[i * 3 + 2] - zMin;
+                    uvData.push( diff / range, 0 );
                 }
             }
-            target.updateUVData( uvData );
-        }
+            else
+            {
+                for ( j = 0; j <= _ny; j++ )
+                {
+                    for ( i = 0; i <= _nx; i++ )
+                    {
+                        uvData.push( i / _nx, j / _ny );
+                    }
+                }
 
-        public function adjustUVCoordinatesForContourColorTexture( nColors:uint ):void
-        {
-//            var i:uint;
-//            var zMin:Number = 0;
-//            var zMax:Number = 0;
-//            _rawUvBuffer = new Vector.<Number>();
-//            for ( i = 0; i < _nVertices; i++ )
-//            {
-//                var z:Number = _rawVertexBuffer[i * 3 + 2];
-//                if ( z < zMin ) zMin = z;
-//                if ( z > zMax ) zMax = z;
-//            }
-//            var range:Number = zMax - zMin;
-//            for ( i = 0; i < _nVertices; i++ )
-//            {
-//                var diff:Number = _rawVertexBuffer[i * 3 + 2] - zMin;
-//                _rawUvBuffer.push( diff / range, 0 );
-//            }
+            }
+            target.updateUVData( uvData );
         }
 
         public function applyGenerator( generator:ISurfaceGenerator, xMin:Number, xMax:Number, yMin:Number, yMax:Number, zScale:Number = 1 ):void
@@ -168,8 +172,8 @@ package away3d.visualisation.primitives
                     _heights[i + j * (_nx + 1)] = z;
                 }
             }
-            invalidateUVs();
             invalidateGeometry();
+            invalidateUVs();
         }
 
     }

@@ -42,9 +42,11 @@
         <![CDATA[
         import away3d.containers.ObjectContainer3D;
         import away3d.lights.PointLight;
+        import away3d.materials.BitmapFileMaterial;
         import away3d.materials.BitmapMaterial;
         import away3d.materials.ColorMaterial;
         import away3d.primitives.Plane;
+        import away3d.textures.ContourMapTexture;
         import away3d.visualisation.axes.XYAxisGrid;
         import away3d.visualisation.axes.XZAxisGrid;
         import away3d.visualisation.axes.YZAxisGrid;
@@ -52,7 +54,9 @@
 
         import com.dz015.expressions.compilers.CompilerEvent;
         import com.dz015.expressions.compilers.XYAExpressionCompiler;
+        import com.dz015.expressions.shuntyard.InfixToPostfixConverter;
         import com.dz015.expressions.tokens.IExpressionTokeniser;
+        import com.dz015.expressions.tokens.TokenStack;
         import com.dz015.expressions.tokens.expression.DefaultExpressionTokeniser;
         import com.dz015.expressions.tokens.expression.DefaultOperatorTokenFactory;
         import com.dz015.generators.ISurfaceGenerator;
@@ -66,6 +70,7 @@
         private var _tokeniser:IExpressionTokeniser;
 
         private var _surface:Surface;
+        private var _converter:InfixToPostfixConverter;
 
         private function createScene():void
         {
@@ -87,15 +92,15 @@
             _camController = new HoverDragController( view3d.camera, stage );
 
 
-            //var pcm:PhongColoredContourMaterial = new PhongColoredContourMaterial();
-            var m:ColorMaterial = new ColorMaterial( 0xFF0000 );
-            //m.specularMethod = new BasicSpecularMethod();
-            m.gloss = 0.5;
+            //var m:ColorMaterial = new ColorMaterial( 0xFF0000 );
+            var m:BitmapMaterial = new BitmapMaterial( (new ContourMapTexture()).texture );
+            m.gloss = 50;
             m.specular = 0.5;
             m.specularColor = 0xffffff;
-            m.ambientColor = 0x00ff00;
+            m.ambientColor = 0x555555;
+
             m.bothSides = true;
-            _surface = new Surface( m, 200, 200 );
+            _surface = new Surface( m, 500, 500 );
             _surface.x = -100;
             _surface.y = -100;
 
@@ -107,7 +112,10 @@
             light.x = -1000;
             light.y = 1000;
             light.z = -1000;
+            //light.specular = 1;
             light.color = 0xFFFFFF;
+
+            m.lights = [light];
 
             view3d.scene.addChild( light );
             view3d.camera.z = -50;
@@ -117,12 +125,21 @@
             view3d.startRendering();
 
             _tokeniser = new DefaultExpressionTokeniser( new DefaultOperatorTokenFactory() );
+            _converter = new InfixToPostfixConverter( _tokeniser );
 
         }
 
         private function onGenerateButtonClicked( event:MouseEvent ):void
         {
-            generateUsingCompiler();
+            if ( generatorType.selectedValue == "compiled" )
+            {
+                generateUsingCompiler();
+            }
+            else
+            {
+                generateUsingInterpreter();
+            }
+
         }
 
         private function generateUsingCompiler():void
@@ -134,6 +151,16 @@
         }
 
         private var _generator:ISurfaceGenerator;
+
+        private function generateUsingInterpreter():void
+        {
+            //_time = getTimer();
+            var tokenStack:TokenStack = _converter.convert( functionInput.text );
+            var interpreter:VMSimulator = new VMSimulator( tokenStack.stack );
+            _generator = ISurfaceGenerator(interpreter);
+            _surface.applyGenerator( _generator, xMin.value, xMax.value, -3, 3, a.value );
+        }
+
 
         private function onCompilerComplete( event:CompilerEvent ):void
         {
