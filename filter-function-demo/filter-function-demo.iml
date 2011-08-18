@@ -2,6 +2,7 @@
 <module type="Flex" version="4">
   <component name="Flex.Build.Configuration">
     <option name="DO_BUILD" value="true" />
+    <option name="MAIN_CLASS" value="FilterFunctionDemo" />
     <option name="OUTPUT_FILE_NAME" value="filter_function_demo.swf" />
     <option name="TARGET_PLAYER_VERSION" value="11.0.0" />
     <option name="ADDITIONAL_COMPILER_OPTIONS" value="-static-link-runtime-shared-libraries" />

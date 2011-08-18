@@ -105,7 +105,7 @@ package away3d.visualisation.primitives
             if ( _heights )
             {
                 var nVertices:uint = (_nx + 1) * (_ny + 1);
-                for ( var i:uint = 0; i < nVertices; i++ )
+                for ( i = 0; i < nVertices; i++ )
                 {
                     vertices[3 * i + 2] = _heights[i];
                 }

@@ -50,6 +50,7 @@ package com.dz015.expressions.compilers
             var cos:QualifiedName = new QualifiedName( "cos", LNamespace.PUBLIC );
             var tan:QualifiedName = new QualifiedName( "tan", LNamespace.PUBLIC );
             var pow:QualifiedName = new QualifiedName( "pow", LNamespace.PUBLIC );
+            var abs:QualifiedName = new QualifiedName( "abs", LNamespace.PUBLIC );
             var converter:InfixToPostfixConverter = new InfixToPostfixConverter( tokeniser );
             var outputStack:TokenStack = converter.convert( expression );
 
@@ -112,6 +113,9 @@ package com.dz015.expressions.compilers
                                 break;
                             case 'tan':
                                 methodBuilder.addOpcode( Opcode.callproperty, [tan,1] );
+                                break;
+                            case 'abs':
+                                methodBuilder.addOpcode( Opcode.callproperty, [abs,1] );
                                 break;
                         }
                         break;

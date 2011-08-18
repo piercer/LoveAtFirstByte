@@ -60,6 +60,9 @@ package
                             case 'tan':
                                 _stack.push( Math.tan( _stack.pop() ) );
                                 break;
+                            case 'abs':
+                                _stack.push( Math.abs( _stack.pop() ) );
+                                break;
                         }
                         break;
 

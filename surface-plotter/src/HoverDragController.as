@@ -2,6 +2,8 @@ package
 {
     import away3d.cameras.Camera3D;
 
+    import flash.display.DisplayObject;
+
     import flash.display.Stage;
     import flash.events.Event;
     import flash.events.MouseEvent;
@@ -14,7 +16,7 @@ package
      */
     public class HoverDragController
     {
-        private var _stage:Stage;
+        private var _stage:DisplayObject;
         private var _target:Vector3D;
         private var _camera:Camera3D;
         private var _radius:Number = 600;
@@ -34,7 +36,7 @@ package
          * @param camera The camera to control
          * @param stage The stage that will be receiving mouse events
          */
-        public function HoverDragController( camera:Camera3D, stage:Stage )
+        public function HoverDragController( camera:Camera3D, stage:DisplayObject )
         {
             _stage = stage;
             _target = new Vector3D();

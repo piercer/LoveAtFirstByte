@@ -14,7 +14,7 @@ package com.dz015.expressions.tokens.expression
         public function DefaultExpressionTokeniser( operatorTokenFactory:IOperatorTokenFactory )
         {
             _operatorTokenFactory = operatorTokenFactory;
-            _tokeniser = /\s*(sin|tan|cos)|(\d+)|(\w+)|(.)/g;
+            _tokeniser = /\s*(sin|tan|cos|abs)|(\d+)|(\w+)|(.)/g;
         }
 
         public function tokenise( s:String ):Vector.<Token>

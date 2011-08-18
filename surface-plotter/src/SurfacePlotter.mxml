@@ -77,32 +77,33 @@
 
             _axes = new ObjectContainer3D();
 
-            var xy:XYAxisGrid = new XYAxisGrid( -100, -100, 100, 100 );
-            xy.z = 100;
+            var xy:XYAxisGrid = new XYAxisGrid( -250, -250, 250, 250 );
+            xy.z = 250;
             _axes.addChild( xy );
 
-            var xz:XZAxisGrid = new XZAxisGrid( -100, -100, 100, 100 );
-            xz.y = -100;
+            var xz:XZAxisGrid = new XZAxisGrid( -250, -250, 250, 250 );
+            xz.y = 250;
             _axes.addChild( xz );
 
-            var yz:YZAxisGrid = new YZAxisGrid( -100, -100, 100, 100 );
-            yz.x = -100;
+            var yz:YZAxisGrid = new YZAxisGrid( -250, -250, 250, 250 );
+            yz.x = -250;
             _axes.addChild( yz );
 
-            _camController = new HoverDragController( view3d.camera, stage );
+            _camController = new HoverDragController( view3d.camera, view3d );
 
 
             //var m:ColorMaterial = new ColorMaterial( 0xFF0000 );
             var m:BitmapMaterial = new BitmapMaterial( (new ContourMapTexture()).texture );
             m.gloss = 50;
             m.specular = 0.5;
+            m.ambient = 0.5;
             m.specularColor = 0xffffff;
             m.ambientColor = 0x555555;
 
             m.bothSides = true;
             _surface = new Surface( m, 500, 500 );
-            _surface.x = -100;
-            _surface.y = -100;
+            _surface.x = -250;
+            _surface.y = -250;
 
             _axes.addChild( _surface );
 
