@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<s:Application
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark" xmlns:components="components.*"
+        preloader="com.bydi.preloader.DIPatcherPreloader"
+        preinitialize="initInjection()"
+        >
+
+    <fx:Style>
+        @namespace comp "components.*";
+
+        comp|ChatComponent
+        {
+            skinClass: ClassReference("skins.ChatComponentSkin");
+        }
+    </fx:Style>
+
+    <s:layout>
+        <s:HorizontalLayout/>
+    </s:layout>
+
+    <components:ChatComponent width="50%"/>
+    <components:ChatComponent width="50%"/>
+
+
+    <fx:Script>
+        <![CDATA[
+        import com.bydi.facade.Facade;
+
+        public function initInjection():void
+        {
+            Facade.injector.mapSingleton( EventDispatcher );
+        }
+        ]]>
+    </fx:Script>
+</s:Application>
