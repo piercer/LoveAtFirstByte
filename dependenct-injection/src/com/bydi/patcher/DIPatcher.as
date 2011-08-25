@@ -40,7 +40,6 @@ package com.bydi.patcher
         {
 
             var metadata:Metadata;
-            //var methodInfo:MethodInfo;
 
             for each ( var swfTag:SwfTag in swfContext.swfTags )
             {
@@ -136,8 +135,6 @@ package com.bydi.patcher
             var facadePackage:LNamespace = MultinameUtil.toLNamespace( "com.bydi.facade.Facade", NamespaceKind.PACKAGE_NAMESPACE );
             var facade:QualifiedName = new QualifiedName( "Facade", facadePackage );
 
-            var injectorPackage:LNamespace = MultinameUtil.toLNamespace( "org.swiftsuspenders.Injector", NamespaceKind.PACKAGE_NAMESPACE );
-            var findMyInjector:QualifiedName = new QualifiedName( "findMyInjector", LNamespace.PUBLIC );
             var getInstance:QualifiedName = new QualifiedName( "getInstance", LNamespace.PUBLIC );
 
             var injector:QualifiedName = new QualifiedName( "injector", LNamespace.PUBLIC );

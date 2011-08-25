@@ -1,0 +1,10 @@
+<interceptors>
+    <interceptor>
+        <swfTag>blah/Foo</swfTag>
+        <methodEntryInvoker>
+            <className>com.dz015.interceptor.Interceptor</className>
+            <methodName>intercept</methodName>
+            <message></message>
+        </methodEntryInvoker>
+    </interceptor>
+</interceptors>

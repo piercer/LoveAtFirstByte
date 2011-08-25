@@ -60,7 +60,7 @@ package com.dz015.expressions.compilers
             methodBuilder.addOpcode( Opcode.setlocal, [4] );
 
             //
-            // Local variable:
+            // Local variables:
             //
             // 1: x
             // 2: y
