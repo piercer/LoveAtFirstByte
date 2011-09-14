@@ -1,9 +1,12 @@
 package
 {
+
+    import com.dz015.expressions.ISurfaceGenerator;
     import com.dz015.expressions.tokens.Token;
 
-    public class VMSimulator
+    public class VMSimulator implements ISurfaceGenerator
     {
+
         private var _instructions:Vector.<Token>;
 
         public function VMSimulator( instructions:Vector.<Token> )
@@ -13,6 +16,7 @@ package
 
         public function f( x:Number, y:Number, a:Number ):Number
         {
+
             var n1:Number;
             var n2:Number;
             var _stack:Vector.<Number> = new Vector.<Number>();

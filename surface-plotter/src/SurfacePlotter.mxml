@@ -2,12 +2,20 @@
 <s:Application
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/mx"
         addedToStage="createScene()"
         backgroundAlpha="0"
 
         xmlns:flex3d="away3d.flex.*"
         >
 
+    <fx:Style>
+        @namespace s "library://ns.adobe.com/flex/spark";
+
+        s|Application {
+            fontSize: 18;
+        }
+    </fx:Style>
     <fx:Declarations>
         <s:RadioButtonGroup id="generatorType"/>
     </fx:Declarations>
@@ -16,22 +24,119 @@
 
         <flex3d:Sprite3DVisualElement id="view3d" width="{width/2}" height="{height}"/>
 
-        <s:VGroup width="50%" height="100%" paddingTop="10" paddingRight="10" paddingBottom="10" paddingLeft="10">
+        <s:VGroup width="50%" height="100%" paddingTop="10" paddingRight="10" paddingBottom="10" paddingLeft="20"
+                  gap="20">
 
-            <s:TextInput id="functionInput" width="90%" left="10"/>
+            <s:VGroup width="100%">
+                <s:Label text="Function"/>
+                <s:TextInput id="functionInput" width="90%" left="10"/>
+            </s:VGroup>
 
-            <s:RadioButton label="Use Compiled Generator" group="{generatorType}" value="compiled"/>
-            <s:RadioButton label="Use Interpreted Generator" group="{generatorType}" value="interpreted"
-                           selected="true"/>
+            <s:Group height="50" width="100%"/>
 
-            <s:Button label="Generate" click="onGenerateButtonClicked(event)"/>
+            <s:VGroup width="50%">
+                <s:Label text="Linear Functions"/>
+                <s:ComboBox change="applyFunction( event )" width="100%">
+                    <s:dataProvider>
+                        <mx:ArrayList>
+                            <fx:String>x+z</fx:String>
+                            <fx:String>x*y</fx:String>
+                            <fx:String>x^2+y^2</fx:String>
+                            <fx:String>x^2-y^2</fx:String>
+                            <fx:String>x^2*y^2</fx:String>
+                            <fx:String>x^3+y^3</fx:String>
+                            <fx:String>x^3*y^3</fx:String>
+                            <fx:String>x^2+y^3</fx:String>
+                            <fx:String>x^2*y^3</fx:String>
+                            <fx:String>x^2+y^2+y^3-x^3</fx:String>
+                            <fx:String>x^4+y^4</fx:String>
+                            <fx:String>x^4-y^4</fx:String>
+                            <fx:String>x^5+y^5</fx:String>
+                        </mx:ArrayList>
+                    </s:dataProvider>
+                </s:ComboBox>
+            </s:VGroup>
+
+            <s:VGroup width="50%">
+                <s:Label text="Cyclical Functions"/>
+                <s:ComboBox change="applyFunction( event )" width="100%">
+                    <s:dataProvider>
+                        <mx:ArrayList>
+                            <fx:String>cos(x)+cos(y)</fx:String>
+                            <fx:String>(cos(x)+cos(y))^2</fx:String>
+                            <fx:String>(cos(x)+cos(y))^3</fx:String>
+                            <fx:String>(cos(x)+cos(y))^4</fx:String>
+                            <fx:String>(cos(x)+cos(y))^5</fx:String>
+                            <fx:String>abs(cos(x)+cos(y))^(1/2)</fx:String>
+                            <fx:String>cos(x^2+y^2)</fx:String>
+                            <fx:String>sin(x^2+y^2)</fx:String>
+                            <fx:String>cos(x^2+y^2)^7</fx:String>
+                            <fx:String>sin(x^2+y^2)^3</fx:String>
+                            <fx:String>abs(cos(x^2+y^2))^(1/2)</fx:String>
+                            <fx:String>abs(cos(x^2+y^2))^(1/8)</fx:String>
+                        </mx:ArrayList>
+                    </s:dataProvider>
+                </s:ComboBox>
+            </s:VGroup>
+
+            <s:VGroup width="50%">
+                <s:Label text="More Functions"/>
+                <s:ComboBox change="applyFunction( event )" width="100%">
+                    <s:dataProvider>
+                        <mx:ArrayList>
+                            <fx:String>-1/(x^2+y^2)</fx:String>
+                            <fx:String>cos(abs(x)+abs(y))</fx:String>
+                            <fx:String>cos(abs(x)+abs(y))*(abs(x)+abs(y))</fx:String>
+                            <fx:String>sin(abs(x)-abs(y))</fx:String>
+                        </mx:ArrayList>
+                    </s:dataProvider>
+                </s:ComboBox>
+            </s:VGroup>
+
+            <s:VGroup>
+                <s:RadioButton label="Use Compiled Generator" group="{generatorType}" value="compiled"/>
+                <s:RadioButton label="Use Interpreted Generator" group="{generatorType}" value="interpreted"
+                               selected="true"/>
+
+                <s:Button label="Generate" click="onGenerateButtonClicked(event)"/>
+            </s:VGroup>
 
             <s:Label id="compileTimeDisplay"/>
             <s:Label id="timeTakenDisplay"/>
 
-            <s:HSlider id="xMin" minimum="-5" maximum="5" value="-3" change="updateSurface(event)" snapInterval="0.1"/>
-            <s:HSlider id="xMax" minimum="-5" maximum="5" value="3" change="updateSurface(event)" snapInterval="0.1"/>
-            <s:HSlider id="a" minimum="0" maximum="60" value="30" change="updateSurface(event)" snapInterval="1"/>
+            <s:VGroup>
+
+                <s:HGroup>
+                    <s:Label text="xMin"/>
+                    <s:HSlider id="xMin" minimum="-5" maximum="5" value="-3" change="updateSurface(event)"
+                               snapInterval="0.1"/>
+                </s:HGroup>
+
+                <s:HGroup>
+                    <s:Label text="xMax"/>
+                    <s:HSlider id="xMax" minimum="-5" maximum="5" value="3" change="updateSurface(event)"
+                               snapInterval="0.1"/>
+                </s:HGroup>
+
+                <s:HGroup>
+                    <s:Label text="yMin"/>
+                    <s:HSlider id="yMin" minimum="-5" maximum="5" value="-3" change="updateSurface(event)"
+                               snapInterval="0.1"/>
+                </s:HGroup>
+
+                <s:HGroup>
+                    <s:Label text="yMax"/>
+                    <s:HSlider id="yMax" minimum="-5" maximum="5" value="3" change="updateSurface(event)"
+                               snapInterval="0.1"/>
+                </s:HGroup>
+
+                <s:HGroup>
+                    <s:Label text="Ampl"/>
+                    <s:HSlider id="a" minimum="0" maximum="60" value="30" change="updateSurface(event)"
+                               snapInterval="1"/>
+                </s:HGroup>
+
+            </s:VGroup>
 
         </s:VGroup>
 
@@ -42,9 +147,7 @@
         <![CDATA[
         import away3d.containers.ObjectContainer3D;
         import away3d.lights.PointLight;
-        import away3d.materials.BitmapFileMaterial;
         import away3d.materials.BitmapMaterial;
-        import away3d.materials.ColorMaterial;
         import away3d.primitives.Plane;
         import away3d.textures.ContourMapTexture;
         import away3d.visualisation.axes.XYAxisGrid;
@@ -52,6 +155,7 @@
         import away3d.visualisation.axes.YZAxisGrid;
         import away3d.visualisation.primitives.Surface;
 
+        import com.dz015.expressions.ISurfaceGenerator;
         import com.dz015.expressions.compilers.CompilerEvent;
         import com.dz015.expressions.compilers.XYAExpressionCompiler;
         import com.dz015.expressions.shuntyard.InfixToPostfixConverter;
@@ -59,7 +163,8 @@
         import com.dz015.expressions.tokens.TokenStack;
         import com.dz015.expressions.tokens.expression.DefaultExpressionTokeniser;
         import com.dz015.expressions.tokens.expression.DefaultOperatorTokenFactory;
-        import com.dz015.generators.ISurfaceGenerator;
+
+        import spark.events.IndexChangeEvent;
 
         private var _mesh1:Plane;
         private var _mesh2:Plane;
@@ -134,31 +239,31 @@
         {
             if ( generatorType.selectedValue == "compiled" )
             {
-                generateUsingCompiler();
+                generateUsingCompiler( functionInput.text );
             }
             else
             {
-                generateUsingInterpreter();
+                generateUsingInterpreter( functionInput.text );
             }
 
         }
 
-        private function generateUsingCompiler():void
+        private function generateUsingCompiler( equation:String ):void
         {
             //_time = getTimer();
             var compiler:XYAExpressionCompiler = new XYAExpressionCompiler();
             compiler.addEventListener( CompilerEvent.COMPILE_COMPLETE, onCompilerComplete );
-            compiler.compile( functionInput.text, _tokeniser );
+            compiler.compile( equation, _tokeniser );
         }
 
         private var _generator:ISurfaceGenerator;
 
-        private function generateUsingInterpreter():void
+        private function generateUsingInterpreter( equation:String ):void
         {
             //_time = getTimer();
-            var tokenStack:TokenStack = _converter.convert( functionInput.text );
+            var tokenStack:TokenStack = _converter.convert( equation );
             var interpreter:VMSimulator = new VMSimulator( tokenStack.stack );
-            _generator = ISurfaceGenerator(interpreter);
+            _generator = ISurfaceGenerator( interpreter );
             _surface.applyGenerator( _generator, xMin.value, xMax.value, -3, 3, a.value );
         }
 
@@ -167,12 +272,19 @@
         {
             var functionClass:Class = event.klass;
             _generator = new functionClass();
-            _surface.applyGenerator( _generator, xMin.value, xMax.value, -3, 3, a.value );
+            _surface.applyGenerator( _generator, xMin.value, xMax.value, yMin.value, yMax.value, a.value );
         }
 
         private function updateSurface( event:Event ):void
         {
-            _surface.applyGenerator( _generator, xMin.value, xMax.value, -3, 3, a.value );
+            _surface.applyGenerator( _generator, xMin.value, xMax.value, yMin.value, yMax.value, a.value );
+        }
+
+        private function applyFunction( event:IndexChangeEvent ):void
+        {
+            var cb:ComboBox = ComboBox( event.target );
+            var equation:String = cb.selectedItem;
+            functionInput.text = "a*(" + equation + ")";
         }
         ]]>
     </fx:Script>

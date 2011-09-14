@@ -5,7 +5,7 @@ package away3d.visualisation.primitives
     import away3d.materials.MaterialBase;
     import away3d.primitives.PrimitiveBase;
 
-    import com.dz015.generators.ISurfaceGenerator;
+    import com.dz015.expressions.ISurfaceGenerator;
 
     public class Surface extends PrimitiveBase
     {
@@ -23,6 +23,7 @@ package away3d.visualisation.primitives
         private var _cellHeight:Number;
 
         private var _builtPlane:Boolean;
+        private var _vertices:Vector.<Number>;
 
         public function Surface( material:MaterialBase, width:Number = 1, height:Number = 1, nx:uint = 100, ny:uint = 100 )
         {
@@ -45,7 +46,6 @@ package away3d.visualisation.primitives
         protected override function buildGeometry( target:SubGeometry ):void
         {
 
-            var vertices:Vector.<Number>;
             var indices:Vector.<uint>;
             var i:uint;
             var j:uint;
@@ -59,7 +59,7 @@ package away3d.visualisation.primitives
                 // Create a flat plane of vertices
                 //
 
-                vertices = new Vector.<Number>();
+                _vertices = new Vector.<Number>();
                 indices = new Vector.<uint>();
 
                 for ( j = 0; j <= _ny; j++ )
@@ -68,7 +68,7 @@ package away3d.visualisation.primitives
                     for ( i = 0; i <= _nx; i++ )
                     {
                         var x:Number = i * _cellWidth;
-                        vertices.push( x, y, 0 );
+                        _vertices.push( x, y, 0 );
                     }
                 }
 
@@ -96,8 +96,9 @@ package away3d.visualisation.primitives
                     }
                 }
 
+                _builtPlane = true;
+
                 target.updateIndexData( indices );
-                target.updateVertexData( vertices );
                 target.autoDeriveVertexNormals = true;
                 target.autoDeriveVertexTangents = true;
             }
@@ -107,9 +108,11 @@ package away3d.visualisation.primitives
                 var nVertices:uint = (_nx + 1) * (_ny + 1);
                 for ( i = 0; i < nVertices; i++ )
                 {
-                    vertices[3 * i + 2] = _heights[i];
+                    _vertices[3 * i + 2] = _heights[i];
                 }
             }
+            target.updateVertexData( _vertices );
+
         }
 
         override protected function buildUVs( target:SubGeometry ):void
@@ -119,7 +122,6 @@ package away3d.visualisation.primitives
             var uvData:Vector.<Number> = new Vector.<Number>();
             if ( _heights )
             {
-
 
 
                 var zMin:Number = 0;
@@ -145,7 +147,7 @@ package away3d.visualisation.primitives
                 {
                     for ( i = 0; i <= _nx; i++ )
                     {
-                        uvData.push( i / _nx, j / _ny );
+                        uvData.push( 0, 0 );
                     }
                 }
 

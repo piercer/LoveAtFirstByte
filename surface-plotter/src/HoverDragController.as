@@ -42,10 +42,10 @@ package
             _target = new Vector3D();
             _camera = camera;
 
-            stage.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
-            stage.addEventListener( MouseEvent.MOUSE_UP, onMouseUp );
+            _stage.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
+            _stage.addEventListener( MouseEvent.MOUSE_UP, onMouseUp );
             _stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
-            stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
+            _stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
         }
 
         /**

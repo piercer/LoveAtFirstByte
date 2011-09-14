@@ -13,17 +13,17 @@
         <s:HorizontalLayout/>
     </s:layout>
 
-    <s:DataGrid id="dataGrid" width="75%" height="100%">
+    <s:DataGrid id="dataGrid" width="25%" height="100%">
         <s:columns>
             <s:ArrayList>
-                <s:GridColumn dataField="a" headerText="A"/>
-                <s:GridColumn dataField="b" headerText="B"/>
-                <s:GridColumn dataField="c" headerText="C"/>
+                <s:GridColumn dataField="sales" headerText="Sales"/>
+                <s:GridColumn dataField="price" headerText="Price"/>
+                <s:GridColumn dataField="quantity" headerText="Quantity"/>
             </s:ArrayList>
         </s:columns>
     </s:DataGrid>
 
-    <s:Group width="25%" height="100%">
+    <s:Group width="75%" height="100%">
 
         <s:layout>
             <s:VerticalLayout/>
@@ -37,6 +37,7 @@
         <s:Button label="Filter" click="onFilterButtonClick(event)"/>
         <s:Button label="Clear Filter" click="onClearFilterClicked(event)"/>
 
+        <s:Label id="numberOfRows"/>
         <s:Label id="compileTimeDisplay"/>
         <s:Label id="timeTakenDisplay"/>
 
@@ -68,25 +69,30 @@
             //
             _data = new ArrayCollection();
             var i:uint;
-            for ( i = 0; i < 50000; i++ )
+            for ( i = 0; i < 60000; i++ )
             {
-                _data.addItem( { a: Math.random(), b: Math.random(), c:Math.random() } );
+                _data.addItem( { sales: Math.floor( Math.random() * 10000 ), price: Math.floor( Math.random() * 500 ), quantity: Math.floor( Math.random() * 40 ) } );
             }
             dataGrid.dataProvider = _data;
+            _data.filterFunction = filterFunction;
+            _data.refresh();
             //
             // Create compiler, and converter
             //
             _compiler = new FilterFunctionCompiler();
             _tokeniser = new FilterFunctionTokeniser( new FilterFunctionOperatorTokenFactory() );
             _converter = new InfixToPostfixConverter( _tokeniser );
-            _compiler.addEventListener( CompilerEvent.COMPILE_COMPLETE, onCompilerComplete )
+            _compiler.addEventListener( CompilerEvent.COMPILE_COMPLETE, onCompilerComplete );
+            numberOfRows.text = ""+_data.length+" rows";
         }
 
         private function onFilterButtonClick( event:MouseEvent ):void
         {
-            if ( filterType.selectedValue=="interpreted" )
+            compileTimeDisplay.text = "";
+            timeTakenDisplay.text = "";
+
+            if ( filterType.selectedValue == "interpreted" )
             {
-                compileTimeDisplay.text = "";
                 filterUsingVMSimulator();
             }
             else
@@ -103,8 +109,8 @@
             _data.filterFunction = simulator.filterFunction;
             _time = getTimer();
             _data.refresh();
-            timeTakenDisplay.text="Interpreted took " + (getTimer() - _time) + " ms" ;
-
+            timeTakenDisplay.text = "Interpreted took " + (getTimer() - _time) + " ms";
+            numberOfRows.text = ""+_data.length+" rows";
         }
 
         private function filterUsingCompiler():void
@@ -117,22 +123,30 @@
 
         private function onCompilerComplete( event:CompilerEvent ):void
         {
-           compileTimeDisplay.text = "Compiling took " + (getTimer() - _time) + " ms";
+            compileTimeDisplay.text = "Compiling took " + (getTimer() - _time) + " ms";
             var functionClass:Class = event.klass;
             var instance:* = new functionClass();
 
             _data.filterFunction = instance.filterFunction;
             _time = getTimer();
             _data.refresh();
-            timeTakenDisplay.text="Compiled took "+ (getTimer() - _time)+ " ms";
+            timeTakenDisplay.text = "Compiled took " + (getTimer() - _time) + " ms";
+            numberOfRows.text = ""+_data.length+" rows";
         }
 
         private function onClearFilterClicked( event:MouseEvent ):void
         {
             _data.filterFunction = null;
             _data.refresh();
+            timeTakenDisplay.text = "";
+            compileTimeDisplay.text = "";
+            numberOfRows.text = ""+_data.length+" rows";
         }
 
+        public function filterFunction( item:Object ):Boolean
+        {
+            return item['price']<100;
+        }
         ]]>
     </fx:Script>
 </s:Application>

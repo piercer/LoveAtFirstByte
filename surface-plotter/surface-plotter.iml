@@ -16,8 +16,8 @@
     <orderEntry type="jdk" jdkName="4.5.1.21328_molehill_080811 (player 11.0)" jdkType="Flex SDK Type" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="LAFBLibrary" level="application" />
-    <orderEntry type="library" name="Away3D" level="application" />
     <orderEntry type="module" module-name="expression-compiler-library" />
+    <orderEntry type="module" module-name="Away3dCoreFP11" />
   </component>
 </module>
 

@@ -5,7 +5,7 @@
  * Time: 15:01
  * To change this template use File | Settings | File Templates.
  */
-package com.dz015.generators
+package com.dz015.expressions
 {
     public interface ISurfaceGenerator
     {

@@ -38,7 +38,7 @@ package com.dz015.expressions.compilers
             var classBuilder:IClassBuilder = packageBuilder.defineClass( "RuntimeClass" + _classNumber );
             var methodBuilder:IMethodBuilder = classBuilder.defineMethod( "f" );
 
-            classBuilder.implementInterface("com.dz015.generators.ISurfaceGenerator");
+            classBuilder.implementInterface("com.dz015.expressions.ISurfaceGenerator");
 
             methodBuilder.defineArgument("Number");
             methodBuilder.defineArgument("Number");
