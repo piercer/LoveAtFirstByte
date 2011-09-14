@@ -5,6 +5,14 @@
         creationComplete="onCreationComplete()"
         >
 
+    <fx:Style>
+        @namespace s "library://ns.adobe.com/flex/spark";
+
+        s|Application {
+            fontSize: 18;
+        }
+    </fx:Style>
+
     <fx:Declarations>
         <s:RadioButtonGroup id="filterType"/>
     </fx:Declarations>
@@ -29,17 +37,27 @@
             <s:VerticalLayout/>
         </s:layout>
 
-        <s:TextInput id="filterInput" width="90%" left="10"/>
 
-        <s:RadioButton label="Use Compiled Filter" group="{filterType}" value="compiled"/>
-        <s:RadioButton label="Use Interpreted Filter" group="{filterType}" value="interpreted" selected="true"/>
+        <s:VGroup width="50%" height="100%" paddingTop="10" paddingRight="10" paddingBottom="10" paddingLeft="20"
+                  gap="20">
 
-        <s:Button label="Filter" click="onFilterButtonClick(event)"/>
-        <s:Button label="Clear Filter" click="onClearFilterClicked(event)"/>
+            <s:TextInput id="filterInput" width="90%" left="10"/>
 
-        <s:Label id="numberOfRows"/>
-        <s:Label id="compileTimeDisplay"/>
-        <s:Label id="timeTakenDisplay"/>
+            <s:VGroup>
+                <s:RadioButton label="Use Compiled Filter" group="{filterType}" value="compiled"/>
+                <s:RadioButton label="Use Interpreted Filter" group="{filterType}" value="interpreted" selected="true"/>
+            </s:VGroup>
+
+            <s:Button label="Filter" click="onFilterButtonClick(event)"/>
+            <s:Button label="Clear Filter" click="onClearFilterClicked(event)"/>
+
+            <s:VGroup>
+                <s:Label id="numberOfRows"/>
+                <s:Label id="compileTimeDisplay"/>
+                <s:Label id="timeTakenDisplay"/>
+            </s:VGroup>
+
+        </s:VGroup>
 
     </s:Group>
 
@@ -74,8 +92,6 @@
                 _data.addItem( { sales: Math.floor( Math.random() * 10000 ), price: Math.floor( Math.random() * 500 ), quantity: Math.floor( Math.random() * 40 ) } );
             }
             dataGrid.dataProvider = _data;
-            _data.filterFunction = filterFunction;
-            _data.refresh();
             //
             // Create compiler, and converter
             //
@@ -83,7 +99,7 @@
             _tokeniser = new FilterFunctionTokeniser( new FilterFunctionOperatorTokenFactory() );
             _converter = new InfixToPostfixConverter( _tokeniser );
             _compiler.addEventListener( CompilerEvent.COMPILE_COMPLETE, onCompilerComplete );
-            numberOfRows.text = ""+_data.length+" rows";
+            numberOfRows.text = "" + _data.length + " rows";
         }
 
         private function onFilterButtonClick( event:MouseEvent ):void
@@ -110,7 +126,7 @@
             _time = getTimer();
             _data.refresh();
             timeTakenDisplay.text = "Interpreted took " + (getTimer() - _time) + " ms";
-            numberOfRows.text = ""+_data.length+" rows";
+            numberOfRows.text = "" + _data.length + " rows";
         }
 
         private function filterUsingCompiler():void
@@ -131,7 +147,7 @@
             _time = getTimer();
             _data.refresh();
             timeTakenDisplay.text = "Compiled took " + (getTimer() - _time) + " ms";
-            numberOfRows.text = ""+_data.length+" rows";
+            numberOfRows.text = "" + _data.length + " rows";
         }
 
         private function onClearFilterClicked( event:MouseEvent ):void
@@ -140,13 +156,9 @@
             _data.refresh();
             timeTakenDisplay.text = "";
             compileTimeDisplay.text = "";
-            numberOfRows.text = ""+_data.length+" rows";
+            numberOfRows.text = "" + _data.length + " rows";
         }
 
-        public function filterFunction( item:Object ):Boolean
-        {
-            return item['price']<100;
-        }
         ]]>
     </fx:Script>
 </s:Application>
